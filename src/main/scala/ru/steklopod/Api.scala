@@ -30,7 +30,7 @@ trait Api extends TeapotJsonSupport with WithAuth {
   val route =
     pathPrefix("teapot") {
       path(LongNumber) { id =>
-        withAuth {
+//        withAuth {
           get {
             parameterMap { paramsMap =>
               onSuccess(teapotRepository.getTeapot(id)) {
@@ -49,5 +49,5 @@ trait Api extends TeapotJsonSupport with WithAuth {
           }
         }
       }
-    }
+//    }
 }
