@@ -9,12 +9,12 @@ import spray.json._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-  implicit val colorFormat = new JsonFormat[Color] {
-    override def read(json: JsValue): Color = Color.fromString(json.convertTo[String])
+  implicit val colorFormat = new JsonFormat[Helper] {
+    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
 
-    override def write(obj: Color): JsValue = JsString(obj.toString)
+    override def write(obj: Helper): JsValue = JsString(obj.toString)
   }
-  implicit val teapotFormat = jsonFormat8(Game.apply)
+  implicit val teapotFormat = jsonFormat9(Game.apply)
 }
 
 //Todo

@@ -5,17 +5,20 @@ import scalikejdbc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-final case class Game(
-//                     id: Long,
-                       nextStep: Int,
-                       won: Int,
-                       finished: Boolean,
-                       players: java.sql.Array,
-                       steps: Int,
-                       size: java.sql.Array,
-                       crossesLengthToWin: Int,
-                       field: java.sql.Array
-                     )
+final case class Game(id: Option[Long],
+                      nextStep: Int,
+                      won: Option[Int],
+                      finished: Boolean,
+                      players: String,
+                      steps: Int,
+                      size: String,
+                      crossesLengthToWin: Int,
+                      fieldPlay: String
+                     ) {
+  def this(nextStep: Int, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
+    this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
+  }
+}
 
 object Game extends SQLSyntaxSupport[Game] {
 
@@ -23,14 +26,15 @@ object Game extends SQLSyntaxSupport[Game] {
 
   def apply(r: ResultName[Game])(rs: WrappedResultSet) =
     new Game(
-      rs.int(r.next_step),
-      rs.int(r.won),
+      rs.longOpt(r.id),
+      rs.int(r.nextStep),
+      rs.intOpt(r.won),
       rs.boolean(r.finished),
-      rs.array(r.players),
+      rs.string(r.players),
       rs.int(r.steps),
-      rs.array(r.size),
-      rs.int(r.crosses_length_to_win),
-      rs.array(9)
+      rs.string(r.size),
+      rs.int(r.crossesLengthToWin),
+      rs.string(9)
     )
 
   private val g = syntax
@@ -44,7 +48,7 @@ object Game extends SQLSyntaxSupport[Game] {
       column.steps -> game.steps,
       column.size -> game.size,
       column.crossesLengthToWin -> game.crossesLengthToWin,
-      column.play_field -> game.field
+      column.fieldPlay -> game.fieldPlay
     ))
     Future {
       sql.update().apply() == 1
@@ -62,26 +66,29 @@ object Game extends SQLSyntaxSupport[Game] {
 }
 
 
-sealed trait Color
+sealed trait Helper
 
-object Color {
+object Helper {
 
-  final case object Red extends Color {
-    override def toString: String = "red"
+  final case object ThreeByThree extends Helper {
+    override def toString: String = "3, 3"
   }
 
-  final case object Blue extends Color {
-    override def toString: String = "blue"
+  final case object ForByFour extends Helper {
+    override def toString: String = "4, 4"
   }
 
-  final case object Green extends Color {
-    override def toString: String = "green"
+  def parseStringArrayToSeq(s: String): Seq[Int] = {
+    s.split(",").map(_.toInt).toSeq
+  }
+  def makeArrayStringFromSeq(seq:Seq[Int]): String = {
+    seq.mkString(", ")
   }
 
-  def fromString(s: String): Color = s match {
-    case "red" => Color.Red
-    case "blue" => Color.Blue
-    case "green" => Color.Green
+
+  def fromString(s: String): Helper = s match {
+    case "3, 3" => Helper.ThreeByThree
+    case "4, 4" => Helper.ForByFour
     case c => throw new IllegalArgumentException(s"There're no color $c")
   }
 }
