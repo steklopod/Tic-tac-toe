@@ -30,9 +30,15 @@ libraryDependencies ++= Seq(
   "com.github.salat" %% "salat" % "1.11.2",
   "org.scala-lang.modules" %% "scala-async" % "0.9.7",
   "com.github.fakemongo" % "fongo" % "2.1.0",
+  "com.chuusai" %% "shapeless" % "2.3.3",
   "com.h2database" % "h2" % "1.4.197" % Test
 )
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")
 
 parallelExecution in Test := false
+
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  Resolver.sonatypeRepo("snapshots")
+)

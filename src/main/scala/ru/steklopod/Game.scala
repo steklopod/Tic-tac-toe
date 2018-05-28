@@ -85,7 +85,22 @@ object Helper {
   }
   def fromString(s: String): Helper = s match {
     case "3, 3" => Helper.ThreeByThree
-    case "4, 4" => Helper.ForByFour
-    case c => throw new IllegalArgumentException(s"There're no color $c")
+//    case "4, 4" => Helper.ForByFour
+    case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
   }
+  def getFieldSeqFromString(gameFieldStr: String): Seq[Seq[Int]] = {
+    val gameFieldSeq: Seq[Int] = makeSeqFromStr(gameFieldStr)
+    val fieldSize = makeSeqFromStr(Helper.ThreeByThree.toString)(1) //TODO - изменение размера поля
+    require(gameFieldSeq.size == 9, "Fiield size must be 3:3. Sorry.")
+    val fieldsSeq = Seq[Seq[Int]]()
+    var from = 0
+    for (n <- 1 to fieldSize) {
+      var to = fieldSize * n
+      val tuple = gameFieldSeq.slice(from, to)
+      from = to
+    }
+    fieldsSeq
+  }
+
+
 }

@@ -31,10 +31,10 @@ object GameDb {
         null,
         false,
         "1, 2",
-        6,
+        0,
         Helper.ThreeByThree.toString,
         3,
-        "0, 1, 2, 0, 0, 0, 0, 0, 0"
+        "0, 0, 0, 0, 0, 0, 0, 0, 0"
       )
       )
     }
