@@ -24,5 +24,5 @@ object WebServer extends Api {
       .onComplete(_ => system.terminate()) // and shutdown when done
   }
 
-  override val teapotRepository: TeapotRepository = DBTeapotRepository
+  override val gameRepository: GameRepository = DBGameRepository$
 }

@@ -5,7 +5,7 @@ import scalikejdbc.{ConnectionPool, _}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object TeapotDb {
+object GameDb {
   def init(): Unit = {
     Class.forName("org.postgresql.Driver")
     ConnectionPool.singleton("jdbc:postgresql://localhost:5432/home?currentSchema=test", "postgres", "postgres")
@@ -32,9 +32,9 @@ object TeapotDb {
         false,
         "1, 2",
         6,
-        "3, 3",
+        Helper.ThreeByThree.toString,
         3,
-        "[0, 1, 2], [0, 0, 0], [0, 0, 0]"
+        "0, 1, 2, 0, 0, 0, 0, 0, 0"
       )
       )
     }

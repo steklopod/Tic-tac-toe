@@ -73,7 +73,6 @@ object Helper {
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"
   }
-
   final case object ForByFour extends Helper {
     override def toString: String = "4, 4"
   }
@@ -84,8 +83,6 @@ object Helper {
   def makeArrayStringFromSeq(seq:Seq[Int]): String = {
     seq.mkString(", ")
   }
-
-
   def fromString(s: String): Helper = s match {
     case "3, 3" => Helper.ThreeByThree
     case "4, 4" => Helper.ForByFour

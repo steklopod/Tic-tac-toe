@@ -14,7 +14,7 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
     override def write(obj: Helper): JsValue = JsString(obj.toString)
   }
-  implicit val teapotFormat = jsonFormat9(Game.apply)
+  implicit val gameFormat = jsonFormat9(Game.apply)
 }
 
 //Todo
@@ -27,16 +27,16 @@ trait WithAuth {
 
 
 trait Api extends GameJsonSupport with WithAuth {
-  val teapotRepository: TeapotRepository
+  val gameRepository: GameRepository
   val route =
     pathPrefix("game") {
       path(LongNumber) { id =>
 //        withAuth {
           get {
             parameterMap { paramsMap =>
-              onSuccess(teapotRepository.getTeapot(id)) {
-                case Some(teapot) =>
-                  complete(StatusCodes.ImATeapot -> JsObject(teapot.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
+              onSuccess(gameRepository.getGame(id)) {
+                case Some(game) =>
+                  complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
                 case None =>
                   complete(StatusCodes.NotFound)
               }
@@ -44,9 +44,9 @@ trait Api extends GameJsonSupport with WithAuth {
           }
         }
       } ~ post {
-        entity(as[Game]) { teapot =>
+        entity(as[Game]) { game =>
           complete {
-            teapotRepository.createTeapot(teapot).map(_ => StatusCodes.OK)
+            gameRepository.createGame(game).map(_ => StatusCodes.OK)
           }
         }
       }
