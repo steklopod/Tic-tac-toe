@@ -10,18 +10,18 @@ import scala.collection.mutable
 import scala.concurrent.Future
 import scala.util.Try
 
-class TeapotApiSpec extends WordSpec with Matchers with ScalatestRouteTest with TeapotJsonSupport {
+class GameApiSpec extends WordSpec with Matchers with ScalatestRouteTest with GameJsonSupport {
 
   private val testTeapot = Teapot(1, 2, 3, 4, Color.Red, None)
   private val testTeapotForInsert = Teapot(2, 2, 3, 4, Color.Red, None)
 
   object TestApi extends Api {
     override val teapotRepository: TeapotRepository = new TeapotRepository {
-      private val teapots = new mutable.HashMap[Long, Teapot]
+      private val teapots = new mutable.HashMap[Long, Game]
       teapots += 1L -> testTeapot
-      override def createTeapot(teapot: Teapot): Future[Unit] = Future.successful(teapots += (teapot.id -> teapot))
+      override def createTeapot(teapot: Game): Future[Unit] = Future.successful(teapots += (teapot.id -> teapot))
 
-      override def getTeapot(id: Long): Future[Option[Teapot]] = Future.successful(teapots.get(id))
+      override def getTeapot(id: Long): Future[Option[Game]] = Future.successful(teapots.get(id))
     }
   }
 
@@ -41,7 +41,7 @@ class TeapotApiSpec extends WordSpec with Matchers with ScalatestRouteTest with 
     "return a teapot for GET requests to the /teapot/:id path" in {
       Get("/teapot/1") ~> auth("123") ~> TestApi.route ~> check {
         status === StatusCodes.ImATeapot
-        responseAs[String].parseJson.convertTo[Teapot] shouldEqual testTeapot
+        responseAs[String].parseJson.convertTo[Game] shouldEqual testTeapot
       }
     }
 

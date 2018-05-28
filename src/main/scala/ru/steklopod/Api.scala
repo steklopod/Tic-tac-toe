@@ -8,15 +8,16 @@ import spray.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait TeapotJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val colorFormat = new JsonFormat[Color] {
     override def read(json: JsValue): Color = Color.fromString(json.convertTo[String])
 
     override def write(obj: Color): JsValue = JsString(obj.toString)
   }
-  implicit val teapotFormat = jsonFormat6(Teapot.apply)
+  implicit val teapotFormat = jsonFormat8(Game.apply)
 }
 
+//Todo
 trait WithAuth {
   def withAuth: Directive0 = optionalHeaderValueByName("auth").flatMap {
     case Some(k) if k == "123" => pass
@@ -25,10 +26,10 @@ trait WithAuth {
 }
 
 
-trait Api extends TeapotJsonSupport with WithAuth {
+trait Api extends GameJsonSupport with WithAuth {
   val teapotRepository: TeapotRepository
   val route =
-    pathPrefix("teapot") {
+    pathPrefix("game") {
       path(LongNumber) { id =>
 //        withAuth {
           get {
@@ -43,7 +44,7 @@ trait Api extends TeapotJsonSupport with WithAuth {
           }
         }
       } ~ post {
-        entity(as[Teapot]) { teapot =>
+        entity(as[Game]) { teapot =>
           complete {
             teapotRepository.createTeapot(teapot).map(_ => StatusCodes.OK)
           }
