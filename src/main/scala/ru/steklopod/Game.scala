@@ -78,8 +78,8 @@ object Helper {
     override def toString: String = "4, 4"
   }
 
-  def parseStringArrayToSeq(s: String): Seq[Int] = {
-    s.split(",").map(_.toInt).toSeq
+  def makeSeqFromStr(s: String): Seq[Int] = {
+    s.split(",").map(_.trim.toInt).toSeq
   }
   def makeArrayStringFromSeq(seq:Seq[Int]): String = {
     seq.mkString(", ")
