@@ -2,6 +2,7 @@ package ru.steklopod
 
 import scalikejdbc._
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -69,6 +70,7 @@ object Game extends SQLSyntaxSupport[Game] {
 sealed trait Helper
 
 object Helper {
+  import scala.collection.mutable.Seq
 
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"
@@ -78,7 +80,7 @@ object Helper {
   }
 
   def makeSeqFromStr(s: String): Seq[Int] = {
-    s.split(",").map(_.trim.toInt).toSeq
+    s.split(",").map(_.trim.toInt)
   }
   def makeArrayStringFromSeq(seq:Seq[Int]): String = {
     seq.mkString(", ")
@@ -88,16 +90,19 @@ object Helper {
 //    case "4, 4" => Helper.ForByFour
     case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
   }
-  def getFieldSeqFromString(gameFieldStr: String): Seq[Seq[Int]] = {
+  def getFieldListFromString(gameFieldStr: String): Seq[Seq[Int]] = {
     val gameFieldSeq: Seq[Int] = makeSeqFromStr(gameFieldStr)
-    val fieldSize = makeSeqFromStr(Helper.ThreeByThree.toString)(1) //TODO - изменение размера поля
+
+    val fieldHigh = makeSeqFromStr(Helper.ThreeByThree.toString)(1) //TODO - изменение размера поля
     require(gameFieldSeq.size == 9, "Fiield size must be 3:3. Sorry.")
-    val fieldsSeq = Seq[Seq[Int]]()
+
+    val fieldsSeq = new ListBuffer[Seq[Int]]()
     var from = 0
-    for (n <- 1 to fieldSize) {
-      var to = fieldSize * n
+    for (n <- 1 to fieldHigh) {
+      var to = fieldHigh * n
       val tuple = gameFieldSeq.slice(from, to)
       from = to
+      fieldsSeq += tuple
     }
     fieldsSeq
   }
