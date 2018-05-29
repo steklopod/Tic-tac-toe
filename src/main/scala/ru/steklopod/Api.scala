@@ -69,27 +69,41 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
               val answer: ToResponseMarshallable = userOption match {
                 case Some(s) => StatusCodes.Conflict -> "Player with such is existing now"
                 case None => playerRepository.createPlayer(player)
-                                             .map(_ => StatusCodes.OK -> s"Player is successfully created")
+                  .map(_ => StatusCodes.OK -> s"Player is successfully created")
               }
               complete(answer)
 
-//TODO - переделать
-//              Player.findByName(player.username)
-//               .onComplete(
-//                {
-//                  case Success(value) => StatusCodes.Conflict -> "Player with such is existing now"
-//
-//                  case Failure(e)  => playerRepository.createPlayer(player)
-//                    .map(_ => StatusCodes.OK -> s"Player is successfully created")
-//                }
-//              )
+              //TODO - переделать
+              //              Player.findByName(player.username)
+              //               .onComplete(
+              //                {
+              //                  case Success(value) => StatusCodes.Conflict -> "Player with such is existing now"
+              //
+              //                  case Failure(e)  => playerRepository.createPlayer(player)
+              //                    .map(_ => StatusCodes.OK -> s"Player is successfully created")
+              //                }
+              //              )
             }
         }
       }
+    } ~ { //TODO - получаю - 'user/testName'
+      path(Segment) { username =>
+        get {
+          parameterMap { paramsMap =>
+            onSuccess(playerRepository.findByName(username)) {
+              case Some(player) =>
+                complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
+              case None =>
+                complete(StatusCodes.NotFound)
+            }
+          }
+        }
+      }
     }
+
+
   }
 }
-
 
 //Todo
 trait WithAuth {
