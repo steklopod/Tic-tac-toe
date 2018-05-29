@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.0",
   "io.spray" %% "spray-json" % "1.3.4",
   "com.h2database" % "h2" % "1.4.197",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "2.2.3",
   "org.postgresql" % "postgresql" % "42.2.2",
   "com.typesafe.slick" %% "slick" % "3.2.3",
   "org.tpolecat" %% "doobie-core" % "0.5.1",

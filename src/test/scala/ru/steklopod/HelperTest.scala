@@ -2,7 +2,7 @@ package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
 
-class GameApiSpec extends FunSuite with Matchers {
+class HelperTest extends FunSuite with Matchers {
 
   test("From Seq[Int] => String and back") {
     val str: String = Helper.makeArrayStringFromSeq(Seq(3, 3, 3))

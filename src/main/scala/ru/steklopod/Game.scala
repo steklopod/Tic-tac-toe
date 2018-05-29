@@ -34,7 +34,7 @@ object Game extends SQLSyntaxSupport[Game] {
       rs.int(r.steps),
       rs.string(r.size),
       rs.int(r.crossesLengthToWin),
-      rs.string(9)
+      rs.string(r.fieldPlay)
     )
 
   private val g = syntax
