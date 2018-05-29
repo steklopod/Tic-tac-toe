@@ -1,10 +1,15 @@
 package ru.steklopod.entities
 
+import javax.validation.constraints.Size
 import scalikejdbc._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
-final case class Player(id: Option[Long], username: String, password: String) {
+import scala.annotation.meta.field
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+final case class Player(id: Option[Long],
+                        @(Size@field)(min = 3, max = 20)username: String,
+                        @(Size@field)(min = 8, max = 100)password: String) {
   def this(username: String, password: String) {
     this(Option.empty[Long], username, password)
   }
@@ -40,5 +45,9 @@ object Player extends SQLSyntaxSupport[Player] {
     )
     sql.map(Player(p.resultName)).headOption().apply()
   }
+
+//  sealed trait PlayerHelper
+//  object PlayerHelper{  }
+
 
 }

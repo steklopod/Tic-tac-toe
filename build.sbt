@@ -32,6 +32,7 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-async" % "0.9.7",
   "com.github.fakemongo" % "fongo" % "2.1.0",
   "com.chuusai" %% "shapeless" % "2.3.3",
+  "com.tsukaby" %% "bean-validation-scala" % "0.4.2",
   "com.h2database" % "h2" % "1.4.197" % Test
 )
 

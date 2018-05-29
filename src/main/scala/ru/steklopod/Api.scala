@@ -4,6 +4,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
+import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.{Game, Helper, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
@@ -26,6 +27,7 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 trait Api extends GameJsonSupport /*with WithAuth */ {
   val gameRepository: GameRepository
   val playerRepository: PlayerRepository
+  val validator = ScalaValidatorFactory.validator
 
   val route = {
     pathPrefix("game") {
@@ -55,7 +57,12 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
       post {
         entity(as[Player]) {
           player =>
-            complete(playerRepository.createPlayer(player).map(_ => StatusCodes.OK))
+            val violations = validator.validate(player)
+            if (violations.nonEmpty) {
+              complete(StatusCodes.BadRequest) // “username” must be greater then 3 and less then 20 characters"
+            } else {
+              complete(playerRepository.createPlayer(player).map(_ => StatusCodes.OK))
+            }
         }
       }
     }
