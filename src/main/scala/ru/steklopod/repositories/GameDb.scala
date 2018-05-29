@@ -10,8 +10,11 @@ object GameDb {
   def init(): Unit = {
     //    Class.forName("org.postgresql.Driver")
     //    ConnectionPool.singleton("jdbc:postgresql://localhost:5432/home?currentSchema=test", "postgres", "postgres")()
-    Class.forName("org.mariadb.jdbc.Driver")
-    ConnectionPool.singleton("jdbc:mariadb://127.0.0.1:3306/test", "root", "root")()
+//    Class.forName("org.mariadb.jdbc.Driver")
+//    ConnectionPool.singleton("jdbc:mariadb://127.0.0.1:3306/test", "root", "root")()
+
+    Class.forName("org.h2.Driver")
+    ConnectionPool.singleton("jdbc:h2:mem:teapot;DB_CLOSE_DELAY=-1", "", "")
   }
 
   def createGameTablesAndEmptyGame(): Future[Boolean] = {
