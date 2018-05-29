@@ -8,7 +8,7 @@ import scala.collection.mutable.{ListBuffer, Seq}
 class HelperTest extends FunSuite with Matchers {
 
   test("From Seq[Int] => String and back") {
-    val str: String = Helper.makeArrayStringFromSeq(Seq(3, 3, 3))
+    val str: String = Helper.makeStringFromSeq(Seq(3, 3, 3))
     print(s" Result String is $str")
 
     val a: Seq[Int] = Helper.makeSeqFromStr(str)
@@ -48,4 +48,10 @@ class HelperTest extends FunSuite with Matchers {
     print("\n" + fieldsSeq)
   }
 
+  test("From ListBuffer[Seq[Int]] => String") {
+    val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
+    val fieldSeq = Helper.getFieldListFromString(gameFieldStr)
+    val s = Helper.makeFieldsStringFromSeq(fieldSeq)
+    print(s)
+  }
 }

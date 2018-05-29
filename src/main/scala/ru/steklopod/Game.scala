@@ -82,14 +82,10 @@ object Helper {
   def makeSeqFromStr(s: String): Seq[Int] = {
     s.split(",").map(_.trim.toInt)
   }
-  def makeArrayStringFromSeq(seq:Seq[Int]): String = {
+  def makeStringFromSeq(seq:Seq[Int]): String = {
     seq.mkString(", ")
   }
-  def fromString(s: String): Helper = s match {
-    case "3, 3" => Helper.ThreeByThree
-//    case "4, 4" => Helper.ForByFour
-    case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
-  }
+
   def getFieldListFromString(gameFieldStr: String): Seq[Seq[Int]] = {
     val gameFieldSeq: Seq[Int] = makeSeqFromStr(gameFieldStr)
 
@@ -107,5 +103,14 @@ object Helper {
     fieldsSeq
   }
 
+  def makeFieldsStringFromSeq(fieldList: Seq[Seq[Int]]):String = {
+    fieldList.flatten.mkString(", ")
+  }
+
+  def fromString(s: String): Helper = s match {
+    case "3, 3" => Helper.ThreeByThree
+    //    case "4, 4" => Helper.ForByFour
+    case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
+  }
 
 }
