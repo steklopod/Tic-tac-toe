@@ -59,8 +59,17 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
           player =>
             val violations = validator.validate(player)
             if (violations.nonEmpty) {
-              complete(StatusCodes.BadRequest) // “username” must be greater then 3 and less then 20 characters"
+              complete(StatusCodes.BadRequest -> "имя должно быть от 4 до 20 символов")
             } else {
+
+//              Player.findByName(player.username).onComplete({
+//                case Some(listInt) => {
+//                  //Do something with my list
+//                }
+//                case Failure(exception) => {
+//                  //Do something with my error
+//                }
+//              })
               complete(playerRepository.createPlayer(player).map(_ => StatusCodes.OK))
             }
         }

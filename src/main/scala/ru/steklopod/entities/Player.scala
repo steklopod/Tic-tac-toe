@@ -46,6 +46,15 @@ object Player extends SQLSyntaxSupport[Player] {
     sql.map(Player(p.resultName)).headOption().apply()
   }
 
+  def findByName(name: String)(implicit s: DBSession = AutoSession): Future[Option[Player]] = Future {
+    val sql = withSQL(
+      select
+        .from[Player](Player as p)
+        .where.eq(p.username, name)
+    )
+    sql.map(Player(p.resultName)).headOption().apply()
+  }
+
 //  sealed trait PlayerHelper
 //  object PlayerHelper{  }
 
