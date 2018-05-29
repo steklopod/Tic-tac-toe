@@ -1,4 +1,4 @@
-package ru.steklopod
+package ru.steklopod.entities
 
 import scalikejdbc._
 

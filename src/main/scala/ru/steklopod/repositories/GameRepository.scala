@@ -1,5 +1,6 @@
-package ru.steklopod
+package ru.steklopod.repositories
 
+import ru.steklopod.entities.Game
 import scalikejdbc.DB
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -14,7 +15,7 @@ trait GameRepository {
 
 object DBGameRepository$ extends GameRepository {
   GameDb.init()
-  Await.result(GameDb.createTablesAndSomeData(), Duration.Inf)
+  Await.result(GameDb.createGameTablesAndEmptyGame(), Duration.Inf)
 
   override def createGame(game: Game): Future[Unit] =
     DB.futureLocalTx(implicit session => Game.create(game).map(_ => ()))
