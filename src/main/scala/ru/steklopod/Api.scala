@@ -1,6 +1,7 @@
 package ru.steklopod
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
@@ -9,7 +10,9 @@ import ru.steklopod.entities.{Game, Helper, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
 
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   //TODO
@@ -61,16 +64,25 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
             if (violations.nonEmpty) {
               complete(StatusCodes.BadRequest -> "имя должно быть от 4 до 20 символов")
             } else {
+              val userOption = Await.result(Player.findByName(player.username), 2 second)
 
-//              Player.findByName(player.username).onComplete({
-//                case Some(listInt) => {
-//                  //Do something with my list
+              val answer: ToResponseMarshallable = userOption match {
+                case Some(s) => StatusCodes.Conflict -> "Player with such is existing now"
+                case None => playerRepository.createPlayer(player)
+                                             .map(_ => StatusCodes.OK -> s"Player is successfully created")
+              }
+              complete(answer)
+
+//TODO - переделать
+//              Player.findByName(player.username)
+//               .onComplete(
+//                {
+//                  case Success(value) => StatusCodes.Conflict -> "Player with such is existing now"
+//
+//                  case Failure(e)  => playerRepository.createPlayer(player)
+//                    .map(_ => StatusCodes.OK -> s"Player is successfully created")
 //                }
-//                case Failure(exception) => {
-//                  //Do something with my error
-//                }
-//              })
-              complete(playerRepository.createPlayer(player).map(_ => StatusCodes.OK))
+//              )
             }
         }
       }
