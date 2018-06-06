@@ -73,19 +73,20 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
               }
             }
         }
-      } ~ get {
-        path(Segment) { username =>
-          parameterMap { paramsMap =>
-            onSuccess(playerRepository.findByName(username)) {
-              case Some(player) =>
-                complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
-              case None =>
-                complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
-            }
+      }
+    } ~ get {
+      path(Segment) { username =>
+        parameterMap { paramsMap =>
+          onSuccess(playerRepository.findByName(username)) {
+            case Some(player) =>
+              complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
+            case None =>
+              complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
           }
         }
       }
     }
+
 
   val routeDebug =
     pathPrefix("/debug/reset") {
@@ -107,7 +108,6 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
             }
         }
       }
-
     }
 
 
