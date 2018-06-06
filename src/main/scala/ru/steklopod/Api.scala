@@ -68,8 +68,8 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
               val username = player.username
               val answer = Await.result(playerRepository.createPlayer(player), 2 second)
               answer match {
-                case ok if ok == username => complete(StatusCodes.OK -> answer)
-                case _ => complete(StatusCodes.Conflict -> answer)
+                case ok if ok => complete(StatusCodes.OK -> s"User with name $username succesfully created")
+                case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
               }
             }
         }
