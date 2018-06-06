@@ -32,7 +32,7 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator
 
-  val route = {
+  val route =
     pathPrefix("game") {
       path(LongNumber) { id =>
         //        withAuth {
@@ -100,9 +100,6 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
         }
       }
     }
-
-
-  }
 }
 
 //Todo
