@@ -13,8 +13,8 @@ object GameDb {
     Class.forName("org.mariadb.jdbc.Driver")
     ConnectionPool.singleton("jdbc:mariadb://127.0.0.1:3306/test", "root", "root")()
 
-//    Class.forName("org.h2.Driver")
-//    ConnectionPool.singleton("jdbc:h2:mem:teapot;DB_CLOSE_DELAY=-1", "", "")
+    //    Class.forName("org.h2.Driver")
+    //    ConnectionPool.singleton("jdbc:h2:mem:teapot;DB_CLOSE_DELAY=-1", "", "")
   }
 
   def createGameTablesAndEmptyGame(): Future[Boolean] = {
@@ -47,4 +47,14 @@ object GameDb {
       Player.create(new Player("testName", "Test password"))
     }
   }
+
+  def truncateAll(): Boolean = {
+    DB autoCommit { implicit session =>
+      sql"""
+           TRUNCATE TABLE player
+        """
+        .execute.apply()
+    }
+  }
+
 }

@@ -1,13 +1,12 @@
 package ru.steklopod
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.{Game, Helper, Player}
-import ru.steklopod.repositories.{GameRepository, PlayerRepository}
+import ru.steklopod.repositories.{GameDb, GameRepository, PlayerRepository}
 import spray.json._
 
 import scala.concurrent.Await
@@ -89,24 +88,15 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
 
 
   val routeDebug =
-    pathPrefix("/debug/reset") {
+    path("/debug/reset") {
       post {
-        entity(as[Player]) {
-          player =>
-            val violations = validator.validate(player)
-            if (violations.nonEmpty) {
-              complete(StatusCodes.BadRequest -> "имя должно быть от 4 до 20 символов")
-            } else {
-              val userOption = Await.result(Player.findByName(player.username), 2 second)
-
-              val answer: ToResponseMarshallable = userOption match {
-                case Some(s) => StatusCodes.Conflict -> "Player with such is existing now"
-                case None => playerRepository.createPlayer(player)
-                  .map(_ => StatusCodes.OK -> s"Player is successfully created")
-              }
-              complete(answer)
-            }
+        val isOK = GameDb.truncateAll()
+        if (isOK) {
+          complete(StatusCodes.OK -> "OK.")
+        }else{
+          complete(Unauthorized.OK -> "OK.")
         }
+
       }
     }
 
