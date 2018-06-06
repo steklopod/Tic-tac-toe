@@ -56,6 +56,7 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
       }
     }
 
+  val routeUser =
     pathPrefix("user") {
       post {
         entity(as[Player]) {
@@ -85,10 +86,8 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
               //              )
             }
         }
-      }
-    } ~ { //TODO - получаю - 'user/testName'
-      path(Segment) { username =>
-        get {
+      } ~ get {
+        path(Segment) { username =>
           parameterMap { paramsMap =>
             onSuccess(playerRepository.findByName(username)) {
               case Some(player) =>
@@ -100,6 +99,7 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
         }
       }
     }
+
 }
 
 //Todo
