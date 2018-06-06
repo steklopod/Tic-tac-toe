@@ -25,8 +25,15 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat = jsonFormat3(Player.apply)
 }
 
+trait WithAuth {
+  def withAuth: Directive0 = optionalHeaderValueByName("admin")
+    .flatMap {
+      case Some(_) | None => pass
+      case _ => complete(StatusCodes.Unauthorized)
+    }
+}
 
-trait Api extends GameJsonSupport /*with WithAuth */ {
+trait Api extends GameJsonSupport with WithAuth {
   val gameRepository: GameRepository
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator
@@ -34,7 +41,6 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
   val route =
     pathPrefix("game") {
       path(LongNumber) { id =>
-        //        withAuth {
         get {
           parameterMap { paramsMap =>
             onSuccess(gameRepository.getGame(id)) {
@@ -45,7 +51,6 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
             }
           }
         }
-        // }
       }
     } ~ post {
       entity(as[Game]) { game =>
@@ -86,28 +91,20 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
       }
     }
 
-
   val routeDebug =
-    path("/debug/reset") {
-      post {
-        val isOK = GameDb.truncateAll()
-        if (isOK) {
-          complete(StatusCodes.OK -> "OK.")
-        }else{
-          complete(Unauthorized.OK -> "OK.")
+    pathPrefix("debug") {
+      path("reset") {
+        withAuth {
+          post {
+            GameDb.truncateAll()
+            complete(StatusCodes.OK -> "Data succesfully deleted from tables.")
+          }
         }
-
       }
     }
-
-
 }
 
-//Todo
-trait WithAuth {
-  def withAuth: Directive0 = optionalHeaderValueByName("auth").flatMap {
-    case Some(k) if k == "123" => pass
-    case _ => complete(StatusCodes.Unauthorized)
-  }
-}
+
+
+
 
