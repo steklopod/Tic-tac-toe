@@ -13,7 +13,7 @@ trait GameRepository {
   def getGame(id: Long): Future[Option[Game]]
 }
 
-object DBGameRepository$ extends GameRepository {
+object DBGameRepository extends GameRepository {
   GameDb.init()
   Await.result(GameDb.createGameTablesAndEmptyGame(), Duration.Inf)
 

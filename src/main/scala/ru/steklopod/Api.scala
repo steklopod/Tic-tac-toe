@@ -15,7 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-  //TODO
+
   implicit val fieldFormat = new JsonFormat[Helper] {
     override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
 
@@ -65,25 +65,12 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
             if (violations.nonEmpty) {
               complete(StatusCodes.BadRequest -> "имя должно быть от 4 до 20 символов")
             } else {
-              val userOption = Await.result(Player.findByName(player.username), 2 second)
-
-              val answer: ToResponseMarshallable = userOption match {
-                case Some(s) => StatusCodes.Conflict -> "Player with such is existing now"
-                case None => playerRepository.createPlayer(player)
-                  .map(_ => StatusCodes.OK -> s"Player is successfully created")
+              val username = player.username
+              val answer = Await.result(playerRepository.createPlayer(player), 2 second)
+              answer match {
+                case ok if ok == username => complete(StatusCodes.OK -> answer)
+                case _ => complete(StatusCodes.Conflict -> answer)
               }
-              complete(answer)
-
-              //TODO - переделать
-              //              Player.findByName(player.username)
-              //               .onComplete(
-              //                {
-              //                  case Success(value) => StatusCodes.Conflict -> "Player with such is existing now"
-              //
-              //                  case Failure(e)  => playerRepository.createPlayer(player)
-              //                    .map(_ => StatusCodes.OK -> s"Player is successfully created")
-              //                }
-              //              )
             }
         }
       } ~ get {
@@ -93,12 +80,36 @@ trait Api extends GameJsonSupport /*with WithAuth */ {
               case Some(player) =>
                 complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
               case None =>
-                complete(StatusCodes.NotFound)
+                complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
             }
           }
         }
       }
     }
+
+  val routeDebug =
+    pathPrefix("/debug/reset") {
+      post {
+        entity(as[Player]) {
+          player =>
+            val violations = validator.validate(player)
+            if (violations.nonEmpty) {
+              complete(StatusCodes.BadRequest -> "имя должно быть от 4 до 20 символов")
+            } else {
+              val userOption = Await.result(Player.findByName(player.username), 2 second)
+
+              val answer: ToResponseMarshallable = userOption match {
+                case Some(s) => StatusCodes.Conflict -> "Player with such is existing now"
+                case None => playerRepository.createPlayer(player)
+                  .map(_ => StatusCodes.OK -> s"Player is successfully created")
+              }
+              complete(answer)
+            }
+        }
+      }
+
+    }
+
 
 }
 

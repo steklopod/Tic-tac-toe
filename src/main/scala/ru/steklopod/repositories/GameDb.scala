@@ -41,11 +41,10 @@ object GameDb {
   def createPlayerTableAndTestGamer(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20), password VARCHAR(100));
+            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE , password VARCHAR(100));
         """
         .execute.apply()
       Player.create(new Player("testName", "Test password"))
     }
   }
-
 }

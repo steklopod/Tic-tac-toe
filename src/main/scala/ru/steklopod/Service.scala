@@ -3,7 +3,7 @@ package ru.steklopod
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
-import ru.steklopod.repositories.{DBGameRepository$, DBPlayerRepository, GameRepository, PlayerRepository}
+import ru.steklopod.repositories.{DBGameRepository, DBPlayerRepository, GameRepository, PlayerRepository}
 import akka.http.scaladsl.server.Directives._
 
 import scala.io.StdIn
@@ -26,7 +26,7 @@ object WebServer extends Api {
       .onComplete(_ => system.terminate()) // and shutdown when done
   }
 
-  override val gameRepository: GameRepository = DBGameRepository$
+  override val gameRepository: GameRepository = DBGameRepository
   override val playerRepository: PlayerRepository = DBPlayerRepository
 
 }
