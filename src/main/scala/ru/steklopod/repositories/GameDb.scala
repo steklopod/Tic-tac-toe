@@ -6,12 +6,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
 
-object GameDb {
+object GameDb  {
   val SHEMA_NAME = "game"
 
   def init(): Unit = {
-    Class.forName(DRIVER_POSTGRES)
-    ConnectionPool.singleton(URL_POSTGRES, LOGIN_POSTGRES, PSWRD_POSTGRES)
+    Class.forName(DRIVER_MARIA_DB)
+    ConnectionPool.singleton(URL_MARIA, LOGIN_MARIA, PSWRD_MARIA)
   }
 
   def createSchema(): Boolean = {
@@ -26,7 +26,7 @@ object GameDb {
   def createGameTablesAndEmptyGame(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            CREATE TABLE IF NOT EXISTS game.game (
+            CREATE TABLE IF NOT EXISTS game (
               id                    SERIAL NOT NULL PRIMARY KEY,
               next_step             INT,
               won                   INT,
@@ -48,7 +48,7 @@ object GameDb {
   def createPlayerTableAndTestGamer(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            CREATE TABLE IF NOT EXISTS game.player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
+            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
         """
         .execute.apply()
       truncatePlayer()
@@ -59,7 +59,7 @@ object GameDb {
   def truncatePlayer(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-           TRUNCATE TABLE game.player
+           TRUNCATE TABLE player
         """
         .execute.apply()
     }
@@ -68,7 +68,7 @@ object GameDb {
   def truncateGame(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-           TRUNCATE TABLE game.game
+           TRUNCATE TABLE game
         """
         .execute.apply()
     }
