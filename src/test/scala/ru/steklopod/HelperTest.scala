@@ -55,4 +55,5 @@ class HelperTest extends FunSuite with Matchers {
     val s = Helper.makeFieldsStringFromSeq(fieldSeq)
     print(s)
   }
+
 }

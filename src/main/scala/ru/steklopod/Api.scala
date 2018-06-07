@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.{Game, Helper, Player}
-import ru.steklopod.repositories.{GameDb, GameRepository, PlayerRepository}
+import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
 
 import scala.concurrent.Await
@@ -14,10 +14,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-
   implicit val fieldFormat = new JsonFormat[Helper] {
     override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
-
     override def write(obj: Helper): JsValue = JsString(obj.toString)
   }
 
@@ -45,7 +43,10 @@ trait Api extends GameJsonSupport with WithAuth {
           parameterMap { paramsMap =>
             onSuccess(gameRepository.getGame(id)) {
               case Some(game) =>
-                complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
+                complete(StatusCodes.OK ->
+
+                  JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */ ) )
+
               case None =>
                 complete(StatusCodes.NotFound)
             }
@@ -96,13 +97,15 @@ trait Api extends GameJsonSupport with WithAuth {
       path("reset") {
         withAuth {
           post {
-            GameDb.truncateAll()
             complete(StatusCodes.OK -> "Data succesfully deleted from tables.")
           }
         }
       }
     }
+
 }
+
+
 
 
 

@@ -30,7 +30,7 @@ object GameDb {
               size                  TEXT,
               crosses_length_to_win INT,
               field_play            TEXT
-            );
+            )
       """
         .execute.apply()
       truncateGame()
@@ -42,7 +42,7 @@ object GameDb {
   def createPlayerTableAndTestGamer(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100));
+            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
         """
         .execute.apply()
       truncatePlayer()
@@ -53,11 +53,11 @@ object GameDb {
   def truncatePlayer(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-           TRUNCATE TABLE player;
+           TRUNCATE TABLE player
         """
         .execute.apply()
       sql"""
-          ALTER TABLE player AUTO_INCREMENT = 1;
+          ALTER TABLE player AUTO_INCREMENT = 1
         """
         .execute.apply()
     }
@@ -65,11 +65,11 @@ object GameDb {
   def truncateGame(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-           TRUNCATE TABLE game;
+           TRUNCATE TABLE game
         """
         .execute.apply()
       sql"""
-          ALTER TABLE game AUTO_INCREMENT = 1;
+          ALTER TABLE game AUTO_INCREMENT = 1
         """
         .execute.apply()
     }

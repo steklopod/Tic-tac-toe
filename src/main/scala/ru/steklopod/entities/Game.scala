@@ -19,6 +19,46 @@ final case class Game(id: Option[Long],
   def this(nextStep: Int, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
   }
+/*
+  {
+    "id": 1,
+    "nextStep": 1,
+    //TODO "won": null,
+    "finished": false,
+    "players": "1, 2",
+    "steps": 0
+    "fieldPlay": "0, 0, 0, 0, 0, 0, 0, 0, 0",
+                         "size": "3, 3",
+                         "params": {},
+                         "crossesLengthToWin": 3,
+  }
+{
+    "id": 7,
+    "next_step": "vasya",
+    "won": null,
+    "finished": false,
+    "players": ["vasya", "nagibator"],
+    "steps": 0,
+    "size": [3, 3],
+    "crosses_length_to_win": 3,
+    "field": [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+    ]
+}
+
+
+
+  {
+	"opponent": "vasya",
+	"size": [3, 3],
+	"first_step_by": "vasya",
+	"crosses_length_to_win": 3
+}
+
+*/
+
 }
 
 object Game extends SQLSyntaxSupport[Game] {
