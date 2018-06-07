@@ -69,7 +69,7 @@ trait Api extends GameJsonSupport with WithAuth {
           player =>
             val violations = validator.validate(player)
             if (violations.nonEmpty) {
-              complete(StatusCodes.BadRequest -> "имя должно быть от 4 до 20 символов")
+              complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
             } else {
               val username = player.username
               val answer = Await.result(playerRepository.createPlayer(player), 2 second)
