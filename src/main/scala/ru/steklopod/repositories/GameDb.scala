@@ -2,25 +2,31 @@ package ru.steklopod.repositories
 
 import ru.steklopod.entities.{Game, Helper, Player}
 import scalikejdbc._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import ru.steklopod.repositories.ConnectionAccesNamesStore._
 
 object GameDb {
-  def init(): Unit = {
-    //    Class.forName("org.postgresql.Driver")
-    //    ConnectionPool.singleton("jdbc:postgresql://localhost:5432/home?currentSchema=test", "postgres", "postgres")()
-    Class.forName("org.mariadb.jdbc.Driver")
-    ConnectionPool.singleton("jdbc:mariadb://127.0.0.1:3306/game", "root", "root")()
+  val SHEMA_NAME = "game"
 
-//        Class.forName("org.h2.Driver")
-//        ConnectionPool.singleton("jdbc:h2:mem:game;MODE=MYSQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;", "", "")
+  def init(): Unit = {
+    Class.forName(DRIVER_POSTGRES)
+    ConnectionPool.singleton(URL_POSTGRES, LOGIN_POSTGRES, PSWRD_POSTGRES)
+  }
+
+  def createSchema(): Boolean = {
+    DB autoCommit { implicit session =>
+      sql"""
+           CREATE SCHEMA IF NOT EXISTS game
+        """
+        .execute.apply()
+    }
   }
 
   def createGameTablesAndEmptyGame(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            CREATE TABLE IF NOT EXISTS game (
+            CREATE TABLE IF NOT EXISTS game.game (
               id                    SERIAL NOT NULL PRIMARY KEY,
               next_step             INT,
               won                   INT,
@@ -42,7 +48,7 @@ object GameDb {
   def createPlayerTableAndTestGamer(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
+            CREATE TABLE IF NOT EXISTS game.player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
         """
         .execute.apply()
       truncatePlayer()
@@ -53,23 +59,16 @@ object GameDb {
   def truncatePlayer(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-           TRUNCATE TABLE player
-        """
-        .execute.apply()
-      sql"""
-          ALTER TABLE player AUTO_INCREMENT = 1
+           TRUNCATE TABLE game.player
         """
         .execute.apply()
     }
   }
+
   def truncateGame(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-           TRUNCATE TABLE game
-        """
-        .execute.apply()
-      sql"""
-          ALTER TABLE game AUTO_INCREMENT = 1
+           TRUNCATE TABLE game.game
         """
         .execute.apply()
     }

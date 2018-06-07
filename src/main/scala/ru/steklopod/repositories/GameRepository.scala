@@ -16,6 +16,7 @@ trait GameRepository {
 object DBGameRepository extends GameRepository {
   GameDb.init()
   Await.result(GameDb.createGameTablesAndEmptyGame(), Duration.Inf)
+  GameDb.createSchema()
 
   override def createGame(game: Game): Future[Unit] =
     DB.futureLocalTx(implicit session => Game.create(game).map(_ => ()))

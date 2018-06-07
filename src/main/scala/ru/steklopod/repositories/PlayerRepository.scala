@@ -19,7 +19,7 @@ trait PlayerRepository {
 }
 
 object DBPlayerRepository extends PlayerRepository {
-  GameDb.init()
+//  GameDb.init()
   Await.result(GameDb.createPlayerTableAndTestGamer(), Duration.Inf)
 
   override def createPlayer(player: Player): Future[Boolean] =
