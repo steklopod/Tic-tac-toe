@@ -23,6 +23,7 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat = jsonFormat3(Player.apply)
 }
 
+
 trait WithAuth {
   def withAuth: Directive0 = optionalHeaderValueByName("admin")
     .flatMap {
