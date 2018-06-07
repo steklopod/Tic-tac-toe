@@ -103,7 +103,6 @@ trait Api extends GameJsonSupport with WithAuth {
         }
       }
     }
-
 }
 
 
