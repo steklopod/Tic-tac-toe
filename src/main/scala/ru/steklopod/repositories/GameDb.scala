@@ -43,6 +43,10 @@ object GameDb {
   def createGameTablesAndEmptyGame(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
+            DROP TABLE IF EXISTS game;
+        """.execute.apply()
+
+      sql"""
             CREATE TABLE IF NOT EXISTS game (
               id                    SERIAL NOT NULL PRIMARY KEY,
               next_step             TEXT,
@@ -56,7 +60,6 @@ object GameDb {
             )
       """
         .execute.apply()
-      truncateGame()
       Game.create(new Game("Vasya", null, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
     }
   }
@@ -64,10 +67,13 @@ object GameDb {
   def createPlayerTableAndTestGamer(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
+            DROP TABLE IF EXISTS player;
+        """.execute.apply()
+
+      sql"""
             CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
         """
         .execute.apply()
-      truncatePlayer()
       Player.create(new Player("testName", "Test password"))
     }
   }

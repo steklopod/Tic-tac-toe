@@ -19,31 +19,9 @@ final case class Game(id: Option[Long],
   def this(nextStep: String, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
 
+//  TODO - конструктор для POST
+
   }
-/*
-  {
-    "id": 1,
-    "nextStep": 1,
-    //TODO "won": null,
-    "finished": false,
-    "players": "1, 2",
-    "steps": 0
-    "fieldPlay": "0, 0, 0, 0, 0, 0, 0, 0, 0",
-                         "size": "3, 3",
-                         "crossesLengthToWin": 3,
-  }
-
-
-
-{
-	"opponent": "vasya",
-	"size": [3, 3],
-	"first_step_by": "vasya",
-	"crosses_length_to_win": 3
-}
-
-*/
-
 }
 
 object Game extends SQLSyntaxSupport[Game] {
@@ -95,11 +73,13 @@ object Game extends SQLSyntaxSupport[Game] {
 sealed trait Helper
 
 object Helper {
+
   import scala.collection.mutable.Seq
 
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"
   }
+
   final case object ForByFour extends Helper {
     override def toString: String = "4, 4"
   }
@@ -107,7 +87,8 @@ object Helper {
   def makeSeqFromStr(s: String): Seq[Int] = {
     s.split(",").map(_.trim.toInt)
   }
-  def makeStringFromSeq(seq:Seq[Int]): String = {
+
+  def makeStringFromSeq(seq: Seq[Int]): String = {
     seq.mkString(", ")
   }
 
@@ -128,7 +109,7 @@ object Helper {
     fieldsSeq
   }
 
-  def makeFieldsStringFromSeq(fieldList: Seq[Seq[Int]]):String = {
+  def makeFieldsStringFromSeq(fieldList: Seq[Seq[Int]]): String = {
     fieldList.flatten.mkString(", ")
   }
 

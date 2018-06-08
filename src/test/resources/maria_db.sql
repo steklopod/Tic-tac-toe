@@ -2,6 +2,8 @@ CREATE SCHEMA IF NOT EXISTS game;
 USE game;
 
 -- game
+DROP TABLE IF EXISTS game;
+
 CREATE TABLE IF NOT EXISTS game (
   id                    SERIAL NOT NULL PRIMARY KEY,
   next_step             TEXT,
@@ -16,6 +18,8 @@ CREATE TABLE IF NOT EXISTS game (
 TRUNCATE TABLE game;
 
 -- player
+DROP TABLE IF EXISTS player;
+
 CREATE TABLE IF NOT EXISTS player (
   id       SERIAL NOT NULL PRIMARY KEY,
   username VARCHAR(20) UNIQUE,
