@@ -2,13 +2,17 @@ package ru.steklopod
 
 import org.scalatest.FunSuite
 import ru.steklopod.entities.{Game, Helper}
+import ru.steklopod.repositories.{DBGameRepository, GameDb}
 import spray.json.{DefaultJsonProtocol, _}
+import scala.concurrent.duration._
+
+import scala.concurrent.Await
 
 trait MyJsonProtocol extends DefaultJsonProtocol {
   implicit val gameFormat = new JsonWriter[Game] {
     def write(g: Game): JsValue = {
       JsObject(
-        "id" ->  g.id.toJson,
+        "id" -> g.id.toJson,
         "next_step" -> JsNumber(g.nextStep),
         "won" -> g.won.toJson,
         "finished" -> JsBoolean(g.finished),
@@ -23,10 +27,21 @@ trait MyJsonProtocol extends DefaultJsonProtocol {
 }
 
 class JsonTest extends FunSuite with MyJsonProtocol {
+
   test("JSON") {
+    GameDb.init()
     val game = new Game(1, None, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
+    val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get
+
     val marshalled = game.toJson
+    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>NEW")
     println(marshalled)
+    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    val marshalledFromDb = gameFromDB.toJson
+    println("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<DB")
+    println(marshalledFromDb)
+    println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
   }
 
 }
