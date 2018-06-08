@@ -26,6 +26,7 @@ libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc-config" % "3.2.1",
   "org.scalikejdbc" %% "scalikejdbc-test" % "3.2.1" % "test",
   "ch.qos.logback" % "logback-classic" % "1.2.1",
+  "com.zaxxer" % "HikariCP" % "3.2.0",
   "com.typesafe.play" %% "anorm" % "2.5.3",
   "org.mongodb" %% "casbah" % "3.1.1",
   "com.github.salat" %% "salat" % "1.11.2",

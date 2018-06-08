@@ -1,27 +1,40 @@
 package ru.steklopod.repositories
 
+import javax.sql.DataSource
 import ru.steklopod.entities.{Game, Helper, Player}
+import ru.steklopod.repositories.ConnectionAccesNamesStore._
 import scalikejdbc._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import ru.steklopod.repositories.ConnectionAccesNamesStore._
 
 object GameDb {
   val SHEMA_NAME = "game"
 
+  object DataSource {
+
+    import com.zaxxer.hikari._
+
+    private[this] lazy val dataSource: DataSource = {
+      val ds = new HikariDataSource()
+      ds.setDriverClassName(DRIVER_MARIA_DB)
+      ds.setJdbcUrl(URL_MARIA)
+      ds.setPassword(PSWRD_MARIA)
+      ds.setUsername(LOGIN_MARIA)
+      ds
+    }
+
+    def apply(): DataSource = dataSource
+  }
+
   def init(): Unit = {
-    Class.forName(DRIVER_MARIA_DB)
-    ConnectionPool.singleton(URL_MARIA, LOGIN_MARIA, PSWRD_MARIA)
+    ConnectionPool.singleton(new DataSourceConnectionPool(DataSource()))
   }
 
   def createSchema(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
            CREATE SCHEMA IF NOT EXISTS game
-        """
-        .execute.apply()
-      sql"""
-           USE game
         """
         .execute.apply()
     }
@@ -45,7 +58,6 @@ object GameDb {
         .execute.apply()
       truncateGame()
       Game.create(new Game("Vasya", null, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
-
     }
   }
 

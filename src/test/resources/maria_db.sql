@@ -4,7 +4,7 @@ USE game;
 -- game
 CREATE TABLE IF NOT EXISTS game (
   id                    SERIAL NOT NULL PRIMARY KEY,
-  next_step             INT,
+  next_step             TEXT,
   won                   INT,
   finished              BOOLEAN,
   players               TEXT,

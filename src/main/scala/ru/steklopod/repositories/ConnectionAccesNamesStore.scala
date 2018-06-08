@@ -8,7 +8,7 @@ object ConnectionAccesNamesStore {
   val LOGIN_POSTGRES = "postgres"
   val PSWRD_POSTGRES = "postgres"
 
-  val URL_MARIA = "jdbc:mariadb://127.0.0.1:3306/test" //+ SHEMA_NAME
+  val URL_MARIA: String = "jdbc:mariadb://127.0.0.1:3306/" + SHEMA_NAME
   val DRIVER_MARIA_DB = "org.mariadb.jdbc.Driver"
   var LOGIN_MARIA = "root"
   val PSWRD_MARIA = "root"
