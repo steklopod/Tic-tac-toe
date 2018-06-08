@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
 
-object GameDb  {
+object GameDb {
   val SHEMA_NAME = "game"
 
   def init(): Unit = {
@@ -20,6 +20,10 @@ object GameDb  {
            CREATE SCHEMA IF NOT EXISTS game
         """
         .execute.apply()
+      sql"""
+           USE game
+        """
+        .execute.apply()
     }
   }
 
@@ -28,7 +32,7 @@ object GameDb  {
       sql"""
             CREATE TABLE IF NOT EXISTS game (
               id                    SERIAL NOT NULL PRIMARY KEY,
-              next_step             INT,
+              next_step             TEXT,
               won                   INT,
               finished              BOOLEAN,
               players               TEXT,
@@ -40,7 +44,7 @@ object GameDb  {
       """
         .execute.apply()
       truncateGame()
-      Game.create(new Game(1, null, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
+      Game.create(new Game("Vasya", null, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
 
     }
   }

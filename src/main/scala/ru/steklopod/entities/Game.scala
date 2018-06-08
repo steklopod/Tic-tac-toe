@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 final case class Game(id: Option[Long],
-                      nextStep: Int,
+                      nextStep: String,
                       won: Option[Int],
                       finished: Boolean,
                       players: String,
@@ -16,8 +16,9 @@ final case class Game(id: Option[Long],
                       crossesLengthToWin: Int,
                       fieldPlay: String
                      ) {
-  def this(nextStep: Int, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
+  def this(nextStep: String, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
+
   }
 /*
   {
@@ -29,28 +30,12 @@ final case class Game(id: Option[Long],
     "steps": 0
     "fieldPlay": "0, 0, 0, 0, 0, 0, 0, 0, 0",
                          "size": "3, 3",
-                         "params": {},
                          "crossesLengthToWin": 3,
   }
+
+
+
 {
-    "id": 7,
-    "next_step": "vasya",
-    "won": null,
-    "finished": false,
-    "players": ["vasya", "nagibator"],
-    "steps": 0,
-    "size": [3, 3],
-    "crosses_length_to_win": 3,
-    "field": [
-        [0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0],
-    ]
-}
-
-
-
-  {
 	"opponent": "vasya",
 	"size": [3, 3],
 	"first_step_by": "vasya",
@@ -68,7 +53,7 @@ object Game extends SQLSyntaxSupport[Game] {
   def apply(r: ResultName[Game])(rs: WrappedResultSet) =
     new Game(
       rs.longOpt(r.id),
-      rs.int(r.nextStep),
+      rs.string(r.nextStep),
       rs.intOpt(r.won),
       rs.boolean(r.finished),
       rs.string(r.players),

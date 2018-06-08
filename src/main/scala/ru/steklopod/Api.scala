@@ -10,7 +10,6 @@ import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
 
 import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
@@ -18,9 +17,44 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
     override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
     override def write(obj: Helper): JsValue = JsString(obj.toString)
   }
-
   implicit val gameFormat = jsonFormat9(Game.apply)
   implicit val playerFormat = jsonFormat3(Player.apply)
+}
+
+trait MyJsonProtocol extends DefaultJsonProtocol  with SprayJsonSupport {
+  implicit val playerFormat = jsonFormat3(Player.apply)
+
+  implicit val fieldFormat = new JsonFormat[Helper] {
+    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
+    override def write(obj: Helper): JsValue = JsString(obj.toString)
+  }
+
+  implicit val gameFormat = new JsonWriter[Game] {
+    override def write(g: Game): JsValue = {
+      JsObject(
+        "id" -> g.id.toJson,
+        "next_step" -> JsString(g.nextStep),
+        "won" -> g.won.toJson,
+        "finished" -> JsBoolean(g.finished),
+        "players" -> JsString(g.players),
+        "steps" -> JsNumber(g.steps),
+        "size" -> JsString(g.size),
+        "crosses_length_to_win" -> JsNumber(g.crossesLengthToWin),
+        "field" -> JsString(g.fieldPlay)
+      )
+    }
+
+//    def read(value: JsValue) = {
+//      value.asJsObject.getFields("id", "next_step", "won", "finished", "players", "steps", "size", "crosses_length_to_win", "field") match {
+//        case Seq(JsString(name), JsNumber(red), JsNumber(green), JsNumber(blue)) =>
+//          new Game(name, red.toInt, green.toInt, blue.toInt)
+//        case _ => throw new DeserializationException("Color expected")
+//      }
+//    }
+
+  }
+
+
 }
 
 
@@ -32,7 +66,7 @@ trait WithAuth {
     }
 }
 
-trait Api extends GameJsonSupport with WithAuth {
+trait Api extends MyJsonProtocol with WithAuth {
   val gameRepository: GameRepository
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator
@@ -54,14 +88,14 @@ trait Api extends GameJsonSupport with WithAuth {
           }
         }
       }
-    } ~ post {
+    } /*~ post {
       entity(as[Game]) { game =>
         complete {
           gameRepository.createGame(game).map(_ => StatusCodes.OK)
         }
       }
     }
-
+*/
   val routeUser =
     pathPrefix("user") {
       post {

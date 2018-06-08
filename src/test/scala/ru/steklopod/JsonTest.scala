@@ -13,7 +13,7 @@ trait MyJsonProtocol extends DefaultJsonProtocol {
     def write(g: Game): JsValue = {
       JsObject(
         "id" -> g.id.toJson,
-        "next_step" -> JsNumber(g.nextStep),
+        "next_step" -> JsString(g.nextStep),
         "won" -> g.won.toJson,
         "finished" -> JsBoolean(g.finished),
         "players" -> JsString(g.players),
@@ -30,7 +30,7 @@ class JsonTest extends FunSuite with MyJsonProtocol {
 
   test("JSON") {
     GameDb.init()
-    val game = new Game(1, None, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
+    val game = new Game("Vasya", None, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
     val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get
 
     val marshalled = game.toJson
