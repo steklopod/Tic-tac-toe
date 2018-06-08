@@ -8,13 +8,12 @@ import scalikejdbc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+
 object GameDb {
   val SHEMA_NAME = "game"
 
   object DataSource {
-
     import com.zaxxer.hikari._
-
     private[this] lazy val dataSource: DataSource = {
       val ds = new HikariDataSource()
       ds.setDriverClassName(DRIVER_MARIA_DB)
@@ -23,13 +22,13 @@ object GameDb {
       ds.setUsername(LOGIN_MARIA)
       ds
     }
-
     def apply(): DataSource = dataSource
   }
 
   def init(): Unit = {
     ConnectionPool.singleton(new DataSourceConnectionPool(DataSource()))
   }
+
 
   def createSchema(): Boolean = {
     DB autoCommit { implicit session =>

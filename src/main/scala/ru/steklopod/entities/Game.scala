@@ -72,6 +72,7 @@ object Game extends SQLSyntaxSupport[Game] {
 
 sealed trait Helper
 
+
 object Helper {
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"
@@ -112,7 +113,7 @@ object Helper {
 
   def fromString(s: String): Helper = s match {
     case "3, 3" => Helper.ThreeByThree
-    //    case "4, 4" => Helper.ForByFour
+//  case "4, 4" => Helper.ForByFour
     case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
   }
 

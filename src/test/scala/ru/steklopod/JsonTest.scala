@@ -1,14 +1,14 @@
 package ru.steklopod
 
-import jdk.nashorn.internal.runtime.JSONListAdapter
 import org.scalatest.FunSuite
+import ru.steklopod.entities.Helper._
 import ru.steklopod.entities.{Game, Helper}
 import ru.steklopod.repositories.{DBGameRepository, GameDb}
 import spray.json.{DefaultJsonProtocol, _}
 
-import scala.concurrent.duration._
 import scala.concurrent.Await
-import ru.steklopod.entities.Helper._
+import scala.concurrent.duration._
+
 
 trait MyJsonProtocol extends DefaultJsonProtocol {
   implicit val gameFormat = new JsonWriter[Game] {
@@ -28,7 +28,9 @@ trait MyJsonProtocol extends DefaultJsonProtocol {
   }
 }
 
+
 class JsonTest extends FunSuite with MyJsonProtocol {
+
 
   test("JSON") {
     GameDb.init()
@@ -45,6 +47,7 @@ class JsonTest extends FunSuite with MyJsonProtocol {
     println(marshalledFromDb)
     println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
   }
+
 
 }
 

@@ -6,7 +6,9 @@ import ru.steklopod.entities.Helper.makeSeqFromStr
 
 import scala.collection.mutable.{ListBuffer}
 
+
 class HelperTest extends FunSuite with Matchers {
+
 
   test("From Seq[Int] => String and back") {
     val str: String = Helper.makeStringFromSeq(Seq(3, 3, 3))
@@ -17,12 +19,14 @@ class HelperTest extends FunSuite with Matchers {
     a.size should be(3)
   }
 
+
   test("String -> Seq[Seq[Int]]") {
     val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
     val fieldSeq: Seq[Seq[Int]] = Helper.getFieldListFromString(gameFieldStr)
     println(fieldSeq)
     fieldSeq.foreach(println)
   }
+
 
   test("Parse game field - full method test") {
     val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
@@ -48,6 +52,7 @@ class HelperTest extends FunSuite with Matchers {
 
     print("\n" + fieldsSeq)
   }
+
 
   test("From ListBuffer[Seq[Int]] => String") {
     val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"

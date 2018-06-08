@@ -13,6 +13,7 @@ import spray.json._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val fieldFormat = new JsonFormat[Helper] {
     override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
@@ -23,8 +24,9 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat = jsonFormat3(Player.apply)
 }
 
+
 trait MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
-  implicit val playerFormat = jsonFormat3(Player.apply)
+  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
 
   implicit val fieldFormat = new JsonFormat[Helper] {
     override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
@@ -69,6 +71,7 @@ trait WithAuth {
       case _ => complete(StatusCodes.Unauthorized)
     }
 }
+
 
 trait Api extends MyJsonProtocol with WithAuth {
   val gameRepository: GameRepository
