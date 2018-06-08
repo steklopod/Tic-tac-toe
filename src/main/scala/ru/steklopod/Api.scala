@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
+import ru.steklopod.entities.Helper.getFieldListFromString
 import ru.steklopod.entities.{Game, Helper, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
@@ -42,10 +43,11 @@ trait MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
         "steps" -> JsNumber(g.steps),
         "size" -> JsString(g.size),
         "crosses_length_to_win" -> JsNumber(g.crossesLengthToWin),
-        "field" -> JsString(g.fieldPlay)
+        "field" -> getFieldListFromString(g.fieldPlay).toJson
       )
     }
 
+    //TODO - read JSON
     //    def read(value: JsValue) = {
     //      value.asJsObject.getFields("id", "next_step", "won", "finished", "players", "steps", "size", "crosses_length_to_win", "field") match {
     //        case Seq(JsString(name), JsNumber(red), JsNumber(green), JsNumber(blue)) =>
@@ -88,6 +90,7 @@ trait Api extends MyJsonProtocol with WithAuth {
         }
       }
     }
+  //TODO - READ JSON
   /*~ post {
        entity(as[Game]) { game =>
          complete {
@@ -138,10 +141,3 @@ trait Api extends MyJsonProtocol with WithAuth {
       }
     }
 }
-
-
-
-
-
-
-

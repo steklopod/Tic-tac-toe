@@ -73,9 +73,6 @@ object Game extends SQLSyntaxSupport[Game] {
 sealed trait Helper
 
 object Helper {
-
-  import scala.collection.mutable.Seq
-
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"
   }

@@ -4,7 +4,7 @@ import org.scalatest.{FunSuite, Matchers}
 import ru.steklopod.entities.Helper
 import ru.steklopod.entities.Helper.makeSeqFromStr
 
-import scala.collection.mutable.{ListBuffer, Seq}
+import scala.collection.mutable.{ListBuffer}
 
 class HelperTest extends FunSuite with Matchers {
 
@@ -17,9 +17,9 @@ class HelperTest extends FunSuite with Matchers {
     a.size should be(3)
   }
 
-  test("Parse game field - Helper test") {
+  test("String -> Seq[Seq[Int]]") {
     val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
-    val fieldSeq = Helper.getFieldListFromString(gameFieldStr)
+    val fieldSeq: Seq[Seq[Int]] = Helper.getFieldListFromString(gameFieldStr)
     println(fieldSeq)
     fieldSeq.foreach(println)
   }
