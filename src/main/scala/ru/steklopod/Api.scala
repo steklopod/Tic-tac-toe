@@ -15,6 +15,7 @@ import scala.concurrent.duration._
 
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+
   implicit val fieldFormat = new JsonFormat[Helper] {
     override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
 
@@ -55,8 +56,8 @@ trait MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
           new Game(firstStepBy, None, false, "Robot, " + opponent, 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
         case _ => throw new DeserializationException("Game expected")
       }
-    }
-  }*/
+    }*/
+  }
 
 }
 

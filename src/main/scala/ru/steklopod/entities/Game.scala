@@ -18,9 +18,11 @@ final case class Game(id: Option[Long],
                      ) {
   def this(nextStep: String, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
-
-//  TODO - конструктор для POST
-//    def this()
+  }
+  //  TODO - конструктор для POST
+  def this(opponent: String, size: String, firstStepBy: String, crossesLengthToWin: Int) {
+    this(firstStepBy, None, false, "Robot, " + opponent, 0,
+      Helper.ThreeByThree.toString, crossesLengthToWin, "0, 0, 0, 0, 0, 0, 0, 0, 0")
   }
 }
 
@@ -74,6 +76,7 @@ sealed trait Helper
 
 
 object Helper {
+
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"
   }
@@ -113,7 +116,7 @@ object Helper {
 
   def fromString(s: String): Helper = s match {
     case "3, 3" => Helper.ThreeByThree
-//  case "4, 4" => Helper.ForByFour
+    //  case "4, 4" => Helper.ForByFour
     case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
   }
 
