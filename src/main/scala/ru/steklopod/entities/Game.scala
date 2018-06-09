@@ -20,7 +20,7 @@ final case class Game(id: Option[Long],
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
 
 //  TODO - конструктор для POST
-
+//    def this()
   }
 }
 

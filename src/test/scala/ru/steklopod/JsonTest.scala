@@ -25,14 +25,41 @@ trait MyJsonProtocol extends DefaultJsonProtocol {
         "field" -> getFieldListFromString(g.fieldPlay).toJson
       )
     }
+
+    //TODO
+    def read(value: JsValue) = {
+      value.asJsObject.getFields("opponent", "size", "first_step_by", "crosses_length_to_win") match {
+        case Seq(JsString(opponent), JsArray(size), JsString(firstStepBy), JsNumber(crossesLengthToWin)) =>
+          new Game(firstStepBy, None, false, "Robot, " + opponent, 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
+        case _ => throw new DeserializationException("Game expected")
+      }
+    }
+
   }
 }
 
 
 class JsonTest extends FunSuite with MyJsonProtocol {
+  //TODO
+
+  test("JSON read"){
+    val json = """
+              {
+      "opponent": "vasya",
+      "size": [3, 3],
+      "first_step_by": "vasya",
+      "crosses_length_to_win": 3
+    }
+               """.toJson
+
+    val game = json.convertTo[Game]
+
+    println(game)
+
+  }
 
 
-  test("JSON") {
+  test("JSON post") {
     GameDb.init()
     val game = new Game("Vasya", None, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
     val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get

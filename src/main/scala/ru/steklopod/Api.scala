@@ -28,11 +28,10 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 trait MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
 
-  implicit val fieldFormat = new JsonFormat[Helper] {
-    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
-
-    override def write(obj: Helper): JsValue = JsString(obj.toString)
-  }
+//  implicit val fieldFormat = new JsonFormat[Helper] {
+//    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
+//    override def write(obj: Helper): JsValue = JsString(obj.toString)
+//  }
 
   implicit val gameFormat = new JsonWriter[Game] {
     override def write(g: Game): JsValue = {
@@ -48,18 +47,16 @@ trait MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
         "field" -> getFieldListFromString(g.fieldPlay).toJson
       )
     }
-
+/*
     //TODO - read JSON
-    //    def read(value: JsValue) = {
-    //      value.asJsObject.getFields("id", "next_step", "won", "finished", "players", "steps", "size", "crosses_length_to_win", "field") match {
-    //        case Seq(JsString(name), JsNumber(red), JsNumber(green), JsNumber(blue)) =>
-    //          new Game(name, red.toInt, green.toInt, blue.toInt)
-    //        case _ => throw new DeserializationException("Color expected")
-    //      }
-    //    }
-
-  }
-
+    override def read(value: JsValue):Game = {
+      value.asJsObject.getFields("opponent", "size", "first_step_by", "crosses_length_to_win") match {
+        case Seq(JsString(opponent), JsArray(size), JsString(firstStepBy), JsNumber(crossesLengthToWin)) =>
+          new Game(firstStepBy, None, false, "Robot, " + opponent, 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
+        case _ => throw new DeserializationException("Game expected")
+      }
+    }
+  }*/
 
 }
 
@@ -92,16 +89,15 @@ trait Api extends MyJsonProtocol with WithAuth {
           }
         }
       }
-    }
-  //TODO - READ JSON
-  /*~ post {
-       entity(as[Game]) { game =>
-         complete {
-           gameRepository.createGame(game).map(_ => StatusCodes.OK)
-         }
-       }
-     }
- */
+    } /*~ post {
+      entity(as[Game]) { game =>
+        complete {
+          gameRepository.createGame(game).map(_ => StatusCodes.OK)
+        }
+      }
+    } //TODO - READ JSON
+*/
+
   val routeUser =
     pathPrefix("user") {
       post {
