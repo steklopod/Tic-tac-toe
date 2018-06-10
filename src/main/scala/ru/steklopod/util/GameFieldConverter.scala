@@ -23,7 +23,6 @@ object GameFieldConverter {
     sizeOfPlayField.toArray[Int].toJson.toString()
   }
 
-
   @deprecated
   final case object ThreeByThree extends GameFieldConverter {
     override def toString: String = "[3, 3]"
