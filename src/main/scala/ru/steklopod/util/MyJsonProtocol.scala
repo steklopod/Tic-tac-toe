@@ -1,11 +1,14 @@
-package ru.steklopod.entities.util
+package ru.steklopod.util
 
-import ru.steklopod.entities.Game
-import ru.steklopod.entities.util.Helper.getFieldListFromString
+import ru.steklopod.entities.{Game, Player}
+import ru.steklopod.util.Helper.getFieldListFromString
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsArray, JsBoolean, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 
 object MyJsonProtocol extends DefaultJsonProtocol {
+  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
+
+  //TODO - next_step - Str, won - Str
   implicit object GameJsonFormat extends RootJsonFormat[Game] {
     def write(g: Game) = JsObject(
       "id" -> g.id.toJson,

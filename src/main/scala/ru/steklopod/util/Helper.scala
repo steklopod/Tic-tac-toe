@@ -1,4 +1,4 @@
-package ru.steklopod.entities.util
+package ru.steklopod.util
 
 import scala.collection.mutable.ListBuffer
 

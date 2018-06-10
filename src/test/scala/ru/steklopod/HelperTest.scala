@@ -1,8 +1,8 @@
 package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
-import ru.steklopod.entities.util.Helper.makeSeqFromStr
-import ru.steklopod.entities.util.Helper
+import ru.steklopod.util.Helper.makeSeqFromStr
+import ru.steklopod.util.Helper
 
 import scala.collection.mutable.ListBuffer
 

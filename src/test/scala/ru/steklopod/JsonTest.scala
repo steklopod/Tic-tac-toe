@@ -2,14 +2,14 @@ package ru.steklopod
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import org.scalatest.FunSuite
-import ru.steklopod.entities.util.Helper._
 import ru.steklopod.entities.Game
-import ru.steklopod.entities.util.Helper
 import ru.steklopod.repositories.{DBGameRepository, GameDb}
+import ru.steklopod.util.Helper
+import ru.steklopod.util.MyJsonProtocol._
 import spray.json._
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import ru.steklopod.entities.util.MyJsonProtocol._
 
 
 class JsonTest extends FunSuite with SprayJsonSupport {
@@ -29,7 +29,7 @@ class JsonTest extends FunSuite with SprayJsonSupport {
     println(game)
   }
 
-  test("JSON post") {
+  test("JSON write") {
     GameDb.init()
     val game = new Game("Vasya", None, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
     val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get

@@ -5,8 +5,8 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
-import ru.steklopod.entities.util.Helper
-import ru.steklopod.entities.util.Helper.getFieldListFromString
+import ru.steklopod.util.Helper
+import ru.steklopod.util.Helper.getFieldListFromString
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
@@ -26,8 +26,8 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat = jsonFormat3(Player.apply)
 }
 
-
-trait MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
+//TODO - удалить
+trait MyJsonProtocolTrait extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
 
 //  implicit val fieldFormat = new JsonFormat[Helper] {
@@ -72,7 +72,7 @@ trait WithAuth {
 }
 
 
-trait Api extends MyJsonProtocol with WithAuth {
+trait Api extends MyJsonProtocolTrait with WithAuth {
   val gameRepository: GameRepository
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator

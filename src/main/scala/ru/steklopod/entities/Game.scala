@@ -1,12 +1,12 @@
 package ru.steklopod.entities
 
-import ru.steklopod.entities.util.Helper
+import ru.steklopod.util.Helper
 import scalikejdbc._
 
-import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+//TODO - next_step - Str, won - Str
 final case class Game(id: Option[Long],
                       nextStep: String,
                       won: Option[Int],
