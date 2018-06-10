@@ -5,8 +5,8 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
-import ru.steklopod.util.Helper
-import ru.steklopod.util.Helper.getFieldListFromString
+import ru.steklopod.util.GameFieldConverter
+import ru.steklopod.util.GameFieldConverter._
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
@@ -18,11 +18,11 @@ import scala.concurrent.duration._
 
 trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
-  implicit val fieldFormat = new JsonFormat[Helper] {
-    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
+//  implicit val fieldFormat = new JsonFormat[Helper] {
+//    override def read(json: JsValue): Helper = fromString(json.convertTo[String])
 
-    override def write(obj: Helper): JsValue = JsString(obj.toString)
-  }
+//    override def write(obj: Helper): JsValue = JsString(obj.toString)
+//  }
   implicit val gameFormat = jsonFormat9(Game.apply)
   implicit val playerFormat = jsonFormat3(Player.apply)
 }

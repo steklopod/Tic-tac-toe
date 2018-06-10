@@ -1,13 +1,11 @@
 package ru.steklopod.entities
 
-import ru.steklopod.util.Helper
-//import ru.steklopod.util.Helper._
+import ru.steklopod.util.GameFieldConverter._
 import scalikejdbc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-//TODO - next_step - Str, won - Str
 final case class Game(id: Option[Long],
                       nextStep: String,
                       won: Option[String],
@@ -22,12 +20,12 @@ final case class Game(id: Option[Long],
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
   }
 
-  //  TODO - конструктор для POST
+  def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int) {
+    this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, makeFieldFromSize(size))
+  }
+
   def this(opponent: String, size: Vector[Int], firstStepBy: String, crossesLengthToWin: Int) {
-    this(firstStepBy, None, false, "Robot, " + opponent, 0,
-      size,
-      crossesLengthToWin,
-      Helper.makeFieldFromSize(size))
+    this(firstStepBy, None, false, "Robot, " + opponent, 0, size, crossesLengthToWin, makeFieldFromSize(size))
   }
 }
 
@@ -43,9 +41,9 @@ object Game extends SQLSyntaxSupport[Game] {
       rs.boolean(r.finished),
       rs.string(r.players),
       rs.int(r.steps),
-      Helper.strToVector(rs.string(r.size)), //TODO
+        convertSizeFromStrToVector(rs.string(r.size)),
       rs.int(r.crossesLengthToWin),
-      Helper.strFieldToVecOfVec(rs.string(r.fieldPlay))
+        convertFieldFromStringToVector(rs.string(r.fieldPlay))
     )
 
   private val g = syntax
@@ -57,9 +55,9 @@ object Game extends SQLSyntaxSupport[Game] {
       column.finished -> game.finished,
       column.players -> game.players,
       column.steps -> game.steps,
-      column.size -> Helper.vectorToStr(game.size),
+        column.size -> convertFieldFromVectorToStr(game.size),
       column.crossesLengthToWin -> game.crossesLengthToWin,
-      column.fieldPlay -> Helper.makeFieldsStringFromVector( Helper.makeFieldFromSize(game.size))
+        column.fieldPlay -> convertFieldFromVectorToString(makeFieldFromSize(game.size))
     ))
     Future {
       sql.update().apply() == 1

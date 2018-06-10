@@ -2,7 +2,7 @@ package ru.steklopod.util
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import ru.steklopod.entities.{Game, Player}
-import ru.steklopod.util.Helper.getFieldListFromString
+import ru.steklopod.util.GameFieldConverter.getFieldListFromString
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsArray, JsBoolean, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 
