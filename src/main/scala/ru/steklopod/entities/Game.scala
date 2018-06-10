@@ -1,6 +1,7 @@
 package ru.steklopod.entities
 
 import ru.steklopod.util.Helper
+//import ru.steklopod.util.Helper._
 import scalikejdbc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -9,21 +10,22 @@ import scala.concurrent.Future
 //TODO - next_step - Str, won - Str
 final case class Game(id: Option[Long],
                       nextStep: String,
-                      won: Option[Int],
+                      won: Option[String],
                       finished: Boolean,
                       players: String,
                       steps: Int,
-                      size: String,
+                      size: Vector[Int],
                       crossesLengthToWin: Int,
                       fieldPlay: String
                      ) {
-  def this(nextStep: String, won: Option[Int], finished: Boolean, players: String, steps: Int, size: String, crossesLengthToWin: Int, fieldPlay: String) {
+  def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int, fieldPlay: String) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
   }
+
   //  TODO - конструктор для POST
   def this(opponent: String, size: Vector[Int], firstStepBy: String, crossesLengthToWin: Int) {
     this(firstStepBy, None, false, "Robot, " + opponent, 0,
-      Helper.ThreeByThree.toString,
+      Vector(3, 4),
       crossesLengthToWin,
       "0, 0, 0, 0, 0, 0, 0, 0, 0")
   }
@@ -37,11 +39,11 @@ object Game extends SQLSyntaxSupport[Game] {
     new Game(
       rs.longOpt(r.id),
       rs.string(r.nextStep),
-      rs.intOpt(r.won),
+      rs.stringOpt(r.won),
       rs.boolean(r.finished),
       rs.string(r.players),
       rs.int(r.steps),
-      rs.string(r.size),
+      Helper.strToVector(rs.string(r.size)), //TODO
       rs.int(r.crossesLengthToWin),
       rs.string(r.fieldPlay)
     )
@@ -55,7 +57,7 @@ object Game extends SQLSyntaxSupport[Game] {
       column.finished -> game.finished,
       column.players -> game.players,
       column.steps -> game.steps,
-      column.size -> game.size,
+      column.size -> Helper.vectorToStr(game.size),
       column.crossesLengthToWin -> game.crossesLengthToWin,
       column.fieldPlay -> game.fieldPlay
     ))
@@ -73,9 +75,3 @@ object Game extends SQLSyntaxSupport[Game] {
     sql.map(Game(g.resultName)).headOption().apply()
   }
 }
-
-
-
-
-
-

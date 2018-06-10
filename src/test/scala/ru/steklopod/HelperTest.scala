@@ -1,13 +1,18 @@
 package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
-import ru.steklopod.util.Helper.makeSeqFromStr
 import ru.steklopod.util.Helper
+import ru.steklopod.util.Helper.makeSeqFromStr
 
 import scala.collection.mutable.ListBuffer
 
 
 class HelperTest extends FunSuite with Matchers {
+
+  test("Vector -> string") {
+    val sizeVector = Vector(3, 4)
+  }
+
 
   test("From Seq[Int] => String and back") {
     val str: String = Helper.makeStringFromSeq(Seq(3, 3, 3))
@@ -32,7 +37,7 @@ class HelperTest extends FunSuite with Matchers {
     val gameFieldSeq: Seq[Int] = makeSeqFromStr(gameFieldStr)
     val fieldSize = makeSeqFromStr(Helper.ThreeByThree.toString)(1) //TODO - изменение размера поля
 
-    gameFieldSeq.size should equal (makeSeqFromStr(Helper.ThreeByThree.toString)(0) * makeSeqFromStr(Helper.ThreeByThree.toString)(1))
+    gameFieldSeq.size should equal(makeSeqFromStr(Helper.ThreeByThree.toString)(0) * makeSeqFromStr(Helper.ThreeByThree.toString)(1))
 
     var fieldsSeq = new ListBuffer[Seq[Int]]()
 

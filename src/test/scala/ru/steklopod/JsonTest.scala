@@ -1,6 +1,5 @@
 package ru.steklopod
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import org.scalatest.FunSuite
 import ru.steklopod.entities.Game
 import ru.steklopod.repositories.{DBGameRepository, GameDb}
@@ -12,7 +11,18 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 
-class JsonTest extends FunSuite with SprayJsonSupport {
+class JsonTest extends FunSuite {
+
+  test("Vector[Int] => String => Vector[Int]") {
+    val sizeVector = Vector(3, 4)
+
+    val strArraySize = Helper.vectorToStr(sizeVector)
+    println(strArraySize)
+
+    val vectorFomStr = Helper.strToVector(strArraySize)
+    println(vectorFomStr)
+  }
+
 
   test("JSON read") {
     val source =
@@ -31,7 +41,7 @@ class JsonTest extends FunSuite with SprayJsonSupport {
 
   test("JSON write") {
     GameDb.init()
-    val game = new Game("Vasya", None, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
+    val game = new Game("Vasya", None, false, "1, 2", 0, Vector(3, 4), 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
     val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get
 
     val marshalled = game.toJson
@@ -44,6 +54,7 @@ class JsonTest extends FunSuite with SprayJsonSupport {
     println(marshalledFromDb)
     println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
   }
+
 }
 
 

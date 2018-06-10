@@ -1,8 +1,17 @@
 package ru.steklopod.util
 
 import scala.collection.mutable.ListBuffer
+import spray.json._
+import ru.steklopod.util.MyJsonProtocol._
 
 object Helper {
+  def strToVector(steps: String): Vector[Int] = steps.parseJson.convertTo[Vector[Int]]
+
+  @throws(classOf[IllegalArgumentException])
+  def vectorToStr(sizeOfPlayField: Vector[Int]): String = {
+    require(sizeOfPlayField.size == 2, "Field size must have 2 elements: height & width only.")
+    sizeOfPlayField.toArray[Int].toJson.toString()
+  }
 
   final case object ThreeByThree extends Helper {
     override def toString: String = "3, 3"

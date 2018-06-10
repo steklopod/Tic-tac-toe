@@ -1,7 +1,6 @@
 package ru.steklopod.repositories
 
 import javax.sql.DataSource
-import ru.steklopod.util.Helper
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
 import scalikejdbc._
@@ -43,14 +42,14 @@ object GameDb {
   def createGameTablesAndEmptyGame(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
       sql"""
-            DROP TABLE IF EXISTS game;
+            DROP TABLE IF EXISTS game
         """.execute.apply()
-
+    //TODO -
       sql"""
             CREATE TABLE IF NOT EXISTS game (
               id                    SERIAL NOT NULL PRIMARY KEY,
               next_step             TEXT,
-              won                   INT,
+              won                   TEXT,
               finished              BOOLEAN,
               players               TEXT,
               steps                 INT,
@@ -60,7 +59,7 @@ object GameDb {
             )
       """
         .execute.apply()
-      Game.create(new Game("Vasya", null, false, "1, 2", 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
+      Game.create(new Game("Vasya", null, false, "Vasya, Nagibator", 0, Vector(3,3), 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
     }
   }
 

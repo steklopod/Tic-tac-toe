@@ -1,11 +1,12 @@
 package ru.steklopod.util
 
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.util.Helper.getFieldListFromString
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsArray, JsBoolean, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 
-object MyJsonProtocol extends DefaultJsonProtocol {
+object MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
 
   //TODO - next_step - Str, won - Str
@@ -17,7 +18,7 @@ object MyJsonProtocol extends DefaultJsonProtocol {
       "finished" -> JsBoolean(g.finished),
       "players" -> JsString(g.players),
       "steps" -> JsNumber(g.steps),
-      "size" -> JsString(g.size),
+      "size" -> JsArray(g.size.map(_.toJson)),
       "crosses_length_to_win" -> JsNumber(g.crossesLengthToWin),
       "field" -> getFieldListFromString(g.fieldPlay).toJson
     )

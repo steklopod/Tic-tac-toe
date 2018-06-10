@@ -10,6 +10,7 @@ import ru.steklopod.util.Helper.getFieldListFromString
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
+import ru.steklopod.util.MyJsonProtocol._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -27,14 +28,15 @@ trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 }
 
 //TODO - удалить
-trait MyJsonProtocolTrait extends DefaultJsonProtocol with SprayJsonSupport {
-  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
+//trait MyJsonProtocolTrait extends DefaultJsonProtocol with SprayJsonSupport {
+//  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
 
 //  implicit val fieldFormat = new JsonFormat[Helper] {
 //    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
 //    override def write(obj: Helper): JsValue = JsString(obj.toString)
 //  }
 
+/*
   implicit val gameFormat = new JsonWriter[Game] {
     override def write(g: Game): JsValue = {
       JsObject(
@@ -44,12 +46,11 @@ trait MyJsonProtocolTrait extends DefaultJsonProtocol with SprayJsonSupport {
         "finished" -> JsBoolean(g.finished),
         "players" -> JsString(g.players),
         "steps" -> JsNumber(g.steps),
-        "size" -> JsString(g.size),
+        "size" -> JsArray(g.size),
         "crosses_length_to_win" -> JsNumber(g.crossesLengthToWin),
         "field" -> getFieldListFromString(g.fieldPlay).toJson
       )
     }
-/*
     //TODO - read JSON
     override def read(value: JsValue):Game = {
       value.asJsObject.getFields("opponent", "size", "first_step_by", "crosses_length_to_win") match {
@@ -57,10 +58,11 @@ trait MyJsonProtocolTrait extends DefaultJsonProtocol with SprayJsonSupport {
           new Game(firstStepBy, None, false, "Robot, " + opponent, 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
         case _ => throw new DeserializationException("Game expected")
       }
-    }*/
+    }
   }
+  }
+*/
 
-}
 
 
 trait WithAuth {
@@ -72,7 +74,7 @@ trait WithAuth {
 }
 
 
-trait Api extends MyJsonProtocolTrait with WithAuth {
+trait Api extends WithAuth {
   val gameRepository: GameRepository
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator
