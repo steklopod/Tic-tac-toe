@@ -3,6 +3,8 @@ package ru.steklopod
 import org.scalatest.{FunSuite, Matchers}
 import ru.steklopod.util.Helper
 import ru.steklopod.util.Helper.makeSeqFromStr
+import spray.json._
+import ru.steklopod.util.MyJsonProtocol._
 
 import scala.collection.mutable.ListBuffer
 
@@ -29,14 +31,18 @@ class HelperTest extends FunSuite with Matchers {
     val height = fieldSize(1)
     val v: Vector[Vector[Int]] = Vector.fill(height, width)(0)
 
-    v.size should be (height)
+    v.size should be(height)
     v(0).size should be(width)
 
     println(v)
     v.foreach(println)
   }
 
-
+  test("Make `field`: String from Vector[Vector[Int]] ") {
+    val fieldVector: Vector[Vector[Int]] = Helper.makeFieldFromSize(Vector(3, 3))
+    val str:String = Helper.makeFieldsStringFromVector(fieldVector)
+    println(str)
+  }
 
 
   test("Parse game field - full method test") {
@@ -64,7 +70,6 @@ class HelperTest extends FunSuite with Matchers {
 
     print("\n" + fieldsSeq)
   }
-
 
 
   test("String -> Seq[Seq[Int]]") {

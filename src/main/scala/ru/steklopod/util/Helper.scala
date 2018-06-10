@@ -5,6 +5,8 @@ import spray.json._
 import ru.steklopod.util.MyJsonProtocol._
 
 object Helper {
+  def makeFieldsStringFromVector(fieldVector: Vector[Vector[Int]]): String = fieldVector.toJson.toString
+
   def makeFieldFromSize(fieldSize: Vector[Int]): Vector[Vector[Int]] = {
     val width = fieldSize(0)
     val height = fieldSize(1)
