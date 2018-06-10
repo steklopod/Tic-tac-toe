@@ -13,7 +13,6 @@ class HelperTest extends FunSuite with Matchers {
     val sizeVector = Vector(3, 4)
   }
 
-
   test("From Seq[Int] => String and back") {
     val str: String = Helper.makeStringFromSeq(Seq(3, 3, 3))
     print(s" Result String is $str")
@@ -24,26 +23,35 @@ class HelperTest extends FunSuite with Matchers {
   }
 
 
-  test("String -> Seq[Seq[Int]]") {
-    val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
-    val fieldSeq: Seq[Seq[Int]] = Helper.getFieldListFromString(gameFieldStr)
-    println(fieldSeq)
-    fieldSeq.foreach(println)
+  test("MakeField from `size` field") {
+    val fieldSize = Vector(3, 3)
+    val width = fieldSize(0)
+    val height = fieldSize(1)
+    val v: Vector[Vector[Int]] = Vector.fill(height, width)(0)
+
+    v.size should be (height)
+    v(0).size should be(width)
+
+    println(v)
+    v.foreach(println)
   }
+
+
 
 
   test("Parse game field - full method test") {
     val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
     val gameFieldSeq: Seq[Int] = makeSeqFromStr(gameFieldStr)
-    val fieldSize = makeSeqFromStr(Helper.ThreeByThree.toString)(1) //TODO - изменение размера поля
+    val fieldSize = Vector(3, 3) //TODO - изменение размера поля
 
-    gameFieldSeq.size should equal(makeSeqFromStr(Helper.ThreeByThree.toString)(0) * makeSeqFromStr(Helper.ThreeByThree.toString)(1))
+    //    gameFieldSeq.size should equal(makeSeqFromStr(Helper.ThreeByThree.toString)(0) * makeSeqFromStr(Helper.ThreeByThree.toString)(1))
 
     var fieldsSeq = new ListBuffer[Seq[Int]]()
 
     var from = 0
-    for (n <- 1 to fieldSize) {
-      var to = fieldSize * n
+    val width = fieldSize(0)
+    for (n <- 1 to width) {
+      var to = width * n
       val tuple: Seq[Int] = gameFieldSeq.slice(from, to)
       fieldsSeq += tuple
       from = to
@@ -51,18 +59,20 @@ class HelperTest extends FunSuite with Matchers {
       print(s"\n field row $n: " + tuple)
     }
 
-    fieldsSeq.size should equal(fieldSize)
-    fieldsSeq(1)(2) should equal(1)
+    //    fieldsSeq.size should equal(fieldSize)
+    //    fieldsSeq(1)(2) should equal(1)
 
     print("\n" + fieldsSeq)
   }
 
 
-  test("From ListBuffer[Seq[Int]] => String") {
+
+  test("String -> Seq[Seq[Int]]") {
     val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
-    val fieldSeq = Helper.getFieldListFromString(gameFieldStr)
-    val s = Helper.makeFieldsStringFromSeq(fieldSeq)
-    print(s)
+    val fieldSeq: Seq[Seq[Int]] = Helper.getFieldListFromString(gameFieldStr)
+    println(fieldSeq)
+    fieldSeq.foreach(println)
   }
+
 
 }

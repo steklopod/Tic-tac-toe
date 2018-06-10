@@ -5,6 +5,13 @@ import spray.json._
 import ru.steklopod.util.MyJsonProtocol._
 
 object Helper {
+  def makeFieldFromSize(fieldSize: Vector[Int]): Vector[Vector[Int]] = {
+    val width = fieldSize(0)
+    val height = fieldSize(1)
+    Vector.fill(height, width)(0)
+  }
+
+
   def strToVector(steps: String): Vector[Int] = steps.parseJson.convertTo[Vector[Int]]
 
   @throws(classOf[IllegalArgumentException])
@@ -13,13 +20,6 @@ object Helper {
     sizeOfPlayField.toArray[Int].toJson.toString()
   }
 
-  final case object ThreeByThree extends Helper {
-    override def toString: String = "3, 3"
-  }
-
-  final case object ForByFour extends Helper {
-    override def toString: String = "4, 4"
-  }
 
   def makeSeqFromStr(s: String): Seq[Int] = {
     s.split(",").map(_.trim.toInt)
@@ -55,6 +55,15 @@ object Helper {
     //  case "4, 4" => Helper.ForByFour
     case c => throw new IllegalArgumentException(s"There is no such size as $c yet. Sorry :-(")
   }
+
+  final case object ThreeByThree extends Helper {
+    override def toString: String = "3, 3"
+  }
+
+  final case object ForByFour extends Helper {
+    override def toString: String = "4, 4"
+  }
+
 
 }
 
