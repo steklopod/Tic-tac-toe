@@ -3,6 +3,7 @@ package ru.steklopod.repositories
 import javax.sql.DataSource
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
+import ru.steklopod.util.Helper
 import scalikejdbc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -59,7 +60,8 @@ object GameDb {
             )
       """
         .execute.apply()
-      Game.create(new Game("Vasya", null, false, "Vasya, Nagibator", 0, Vector(3,3), 3, "0, 0, 0, 0, 0, 0, 0, 0, 0"))
+      Game.create(new Game("Vasya", null, false, "Vasya, Nagibator",
+        0, Vector(3,3), 3, Helper.makeFieldFromSize(Vector(3,3))))
     }
   }
 

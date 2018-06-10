@@ -16,18 +16,18 @@ final case class Game(id: Option[Long],
                       steps: Int,
                       size: Vector[Int],
                       crossesLengthToWin: Int,
-                      fieldPlay: String
+                      fieldPlay: Vector[Vector[Int]]
                      ) {
-  def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int, fieldPlay: String) {
+  def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int, fieldPlay: Vector[Vector[Int]]) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
   }
 
   //  TODO - конструктор для POST
   def this(opponent: String, size: Vector[Int], firstStepBy: String, crossesLengthToWin: Int) {
     this(firstStepBy, None, false, "Robot, " + opponent, 0,
-      Vector(3, 4),
+      size,
       crossesLengthToWin,
-      "0, 0, 0, 0, 0, 0, 0, 0, 0")
+      Helper.makeFieldFromSize(size))
   }
 }
 
@@ -45,7 +45,7 @@ object Game extends SQLSyntaxSupport[Game] {
       rs.int(r.steps),
       Helper.strToVector(rs.string(r.size)), //TODO
       rs.int(r.crossesLengthToWin),
-      rs.string(r.fieldPlay)
+      Helper.strFieldToVecOfVec(rs.string(r.fieldPlay))
     )
 
   private val g = syntax
@@ -59,7 +59,7 @@ object Game extends SQLSyntaxSupport[Game] {
       column.steps -> game.steps,
       column.size -> Helper.vectorToStr(game.size),
       column.crossesLengthToWin -> game.crossesLengthToWin,
-      column.fieldPlay -> game.fieldPlay
+      column.fieldPlay -> Helper.makeFieldsStringFromVector( Helper.makeFieldFromSize(game.size))
     ))
     Future {
       sql.update().apply() == 1

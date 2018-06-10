@@ -16,11 +16,13 @@ class JsonTest extends FunSuite {
   test("Vector[Int] => String => Vector[Int]") {
     val sizeVector = Vector(3, 4)
 
-    val strArraySize = Helper.vectorToStr(sizeVector)
+    val strArraySize: String = Helper.vectorToStr(sizeVector)
     println(strArraySize)
 
-    val vectorFomStr = Helper.strToVector(strArraySize)
+    val vectorFomStr: Vector[Int] = Helper.strToVector(strArraySize)
+
     println(vectorFomStr)
+
   }
 
 
@@ -41,7 +43,14 @@ class JsonTest extends FunSuite {
 
   test("JSON write") {
     GameDb.init()
-    val game = new Game("Vasya", None, false, "1, 2", 0, Vector(3, 4), 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
+
+    val sizeOfField = Vector(3, 3)
+    val game = new Game(
+      "Vasya", None, false,
+      "Vasya, Nagibator", 0,
+      sizeOfField, 3,
+      Helper.makeFieldFromSize(sizeOfField)
+    )
     val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get
 
     val marshalled = game.toJson

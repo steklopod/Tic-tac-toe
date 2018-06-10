@@ -3,8 +3,6 @@ package ru.steklopod
 import org.scalatest.{FunSuite, Matchers}
 import ru.steklopod.util.Helper
 import ru.steklopod.util.Helper.makeSeqFromStr
-import spray.json._
-import ru.steklopod.util.MyJsonProtocol._
 
 import scala.collection.mutable.ListBuffer
 
@@ -40,36 +38,17 @@ class HelperTest extends FunSuite with Matchers {
 
   test("Make `field`: String from Vector[Vector[Int]] ") {
     val fieldVector: Vector[Vector[Int]] = Helper.makeFieldFromSize(Vector(3, 3))
-    val str:String = Helper.makeFieldsStringFromVector(fieldVector)
+    val str: String = Helper.makeFieldsStringFromVector(fieldVector)
     println(str)
   }
 
+  test("Make `field`: Vector[Vector[Int]] from String") {
+        val fieldVector: Vector[Vector[Int]] = Helper.makeFieldFromSize(Vector(3, 3))
+        val str:String = Helper.makeFieldsStringFromVector(fieldVector)
 
-  test("Parse game field - full method test") {
-    val gameFieldStr = "0, 0, 1, 0, 0, 1, 0, 0, 1"
-    val gameFieldSeq: Seq[Int] = makeSeqFromStr(gameFieldStr)
-    val fieldSize = Vector(3, 3) //TODO - изменение размера поля
-
-    //    gameFieldSeq.size should equal(makeSeqFromStr(Helper.ThreeByThree.toString)(0) * makeSeqFromStr(Helper.ThreeByThree.toString)(1))
-
-    var fieldsSeq = new ListBuffer[Seq[Int]]()
-
-    var from = 0
-    val width = fieldSize(0)
-    for (n <- 1 to width) {
-      var to = width * n
-      val tuple: Seq[Int] = gameFieldSeq.slice(from, to)
-      fieldsSeq += tuple
-      from = to
-
-      print(s"\n field row $n: " + tuple)
-    }
-
-    //    fieldsSeq.size should equal(fieldSize)
-    //    fieldsSeq(1)(2) should equal(1)
-
-    print("\n" + fieldsSeq)
+        println(str)
   }
+
 
 
   test("String -> Seq[Seq[Int]]") {

@@ -20,7 +20,7 @@ object MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
       "steps" -> JsNumber(g.steps),
       "size" -> JsArray(g.size.map(_.toJson)),
       "crosses_length_to_win" -> JsNumber(g.crossesLengthToWin),
-      "field" -> getFieldListFromString(g.fieldPlay).toJson
+      "field" -> JsArray(g.fieldPlay.map(_.toJson))
     )
 
     def read(value: JsValue): Game = {
