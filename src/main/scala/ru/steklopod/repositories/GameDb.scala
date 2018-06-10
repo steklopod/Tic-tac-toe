@@ -40,12 +40,11 @@ object GameDb {
     }
   }
 
-  def createGameTablesAndEmptyGame(): Future[Boolean] = {
-    DB futureLocalTx { implicit session =>
+  def createGameTablesAndEmptyGame(): Game = {
+    DB autoCommit  { implicit session =>
       sql"""
             DROP TABLE IF EXISTS game
         """.execute.apply()
-    //TODO -
       sql"""
             CREATE TABLE IF NOT EXISTS game (
               id                    SERIAL NOT NULL PRIMARY KEY,
@@ -60,6 +59,7 @@ object GameDb {
             )
       """
         .execute.apply()
+
       Game.create(new Game("Vasya", null, false, "Vasya, Nagibator",
         0, Vector(3,3), 3, GameFieldConverter.makeFieldFromSize(Vector(3,3))))
     }

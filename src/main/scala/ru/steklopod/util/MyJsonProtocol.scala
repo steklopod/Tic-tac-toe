@@ -2,14 +2,12 @@ package ru.steklopod.util
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import ru.steklopod.entities.{Game, Player}
-import ru.steklopod.util.GameFieldConverter.getFieldListFromString
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsArray, JsBoolean, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 
 object MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
 
-  //TODO - next_step - Str, won - Str
   implicit object GameJsonFormat extends RootJsonFormat[Game] {
     def write(g: Game) = JsObject(
       "id" -> g.id.toJson,
@@ -36,5 +34,4 @@ object MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
       }
     }
   }
-
 }

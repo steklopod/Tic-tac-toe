@@ -1,69 +1,17 @@
 package ru.steklopod
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
-import ru.steklopod.util.GameFieldConverter
-import ru.steklopod.util.GameFieldConverter._
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
-import spray.json._
 import ru.steklopod.util.MyJsonProtocol._
+import spray.json._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
-
-
-trait GameJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-
-//  implicit val fieldFormat = new JsonFormat[Helper] {
-//    override def read(json: JsValue): Helper = fromString(json.convertTo[String])
-
-//    override def write(obj: Helper): JsValue = JsString(obj.toString)
-//  }
-  implicit val gameFormat = jsonFormat9(Game.apply)
-  implicit val playerFormat = jsonFormat3(Player.apply)
-}
-
-//TODO - удалить
-//trait MyJsonProtocolTrait extends DefaultJsonProtocol with SprayJsonSupport {
-//  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
-
-//  implicit val fieldFormat = new JsonFormat[Helper] {
-//    override def read(json: JsValue): Helper = Helper.fromString(json.convertTo[String])
-//    override def write(obj: Helper): JsValue = JsString(obj.toString)
-//  }
-
-/*
-  implicit val gameFormat = new JsonWriter[Game] {
-    override def write(g: Game): JsValue = {
-      JsObject(
-        "id" -> g.id.toJson,
-        "next_step" -> JsString(g.nextStep),
-        "won" -> g.won.toJson,
-        "finished" -> JsBoolean(g.finished),
-        "players" -> JsString(g.players),
-        "steps" -> JsNumber(g.steps),
-        "size" -> JsArray(g.size),
-        "crosses_length_to_win" -> JsNumber(g.crossesLengthToWin),
-        "field" -> getFieldListFromString(g.fieldPlay).toJson
-      )
-    }
-    //TODO - read JSON
-    override def read(value: JsValue):Game = {
-      value.asJsObject.getFields("opponent", "size", "first_step_by", "crosses_length_to_win") match {
-        case Seq(JsString(opponent), JsArray(size), JsString(firstStepBy), JsNumber(crossesLengthToWin)) =>
-          new Game(firstStepBy, None, false, "Robot, " + opponent, 0, Helper.ThreeByThree.toString, 3, "0, 0, 0, 0, 0, 0, 0, 0, 0")
-        case _ => throw new DeserializationException("Game expected")
-      }
-    }
-  }
-  }
-*/
-
-
 
 trait WithAuth {
   def withAuth: Directive0 = optionalHeaderValueByName("admin")
@@ -93,14 +41,14 @@ trait Api extends WithAuth {
           }
         }
       }
-    } /*~ post {
+    } ~ post {
       entity(as[Game]) { game =>
         complete {
-          gameRepository.createGame(game).map(_ => StatusCodes.OK)
+          //TODO - возврат id
+          StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
         }
       }
-    } //TODO - READ JSON
-*/
+    }
 
   val routeUser =
     pathPrefix("user") {

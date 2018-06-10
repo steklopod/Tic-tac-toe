@@ -48,7 +48,7 @@ object Game extends SQLSyntaxSupport[Game] {
 
   private val g = syntax
 
-  def create(game: Game)(implicit session: DBSession = AutoSession): Future[Boolean] = {
+  def create(game: Game)(implicit session: DBSession = AutoSession): Game = {
     val sql = withSQL(insert.into(Game).namedValues(
       column.nextStep -> game.nextStep,
       column.won -> game.won,
@@ -59,9 +59,10 @@ object Game extends SQLSyntaxSupport[Game] {
       column.crossesLengthToWin -> game.crossesLengthToWin,
         column.fieldPlay -> convertFieldFromVectorToString(makeFieldFromSize(game.size))
     ))
-    Future {
-      sql.update().apply() == 1
-    }
+//    Future {
+      sql.update().apply()
+//    }
+    game
   }
 
   def findById(id: Long)(implicit s: DBSession = AutoSession): Future[Option[Game]] = Future {

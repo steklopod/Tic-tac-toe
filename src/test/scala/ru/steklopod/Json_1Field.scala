@@ -12,7 +12,7 @@ trait SupperClassJsonSupport  extends DefaultJsonProtocol {
     }
   }
 }
+
 object Main extends App with SupperClassJsonSupport {
   println(SuperClass(Some("1234")).toJson)
 }
-
