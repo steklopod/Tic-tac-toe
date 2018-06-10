@@ -1,7 +1,8 @@
 package ru.steklopod.repositories
 
 import javax.sql.DataSource
-import ru.steklopod.entities.{Game, Helper, Player}
+import ru.steklopod.entities.util.Helper
+import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
 import scalikejdbc._
 

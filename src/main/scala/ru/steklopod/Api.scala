@@ -5,8 +5,9 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
-import ru.steklopod.entities.Helper.getFieldListFromString
-import ru.steklopod.entities.{Game, Helper, Player}
+import ru.steklopod.entities.util.Helper
+import ru.steklopod.entities.util.Helper.getFieldListFromString
+import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
 

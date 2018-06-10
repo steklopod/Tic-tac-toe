@@ -1,14 +1,13 @@
 package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
-import ru.steklopod.entities.Helper
-import ru.steklopod.entities.Helper.makeSeqFromStr
+import ru.steklopod.entities.util.Helper.makeSeqFromStr
+import ru.steklopod.entities.util.Helper
 
-import scala.collection.mutable.{ListBuffer}
+import scala.collection.mutable.ListBuffer
 
 
 class HelperTest extends FunSuite with Matchers {
-
 
   test("From Seq[Int] => String and back") {
     val str: String = Helper.makeStringFromSeq(Seq(3, 3, 3))

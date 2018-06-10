@@ -5,7 +5,6 @@ import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import ru.steklopod.repositories.{DBGameRepository, DBPlayerRepository, GameRepository, PlayerRepository}
 import akka.http.scaladsl.server.Directives._
-import ru.steklopod.Api
 
 import scala.io.StdIn
 
