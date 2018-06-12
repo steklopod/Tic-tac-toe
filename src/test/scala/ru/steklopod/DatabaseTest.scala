@@ -13,7 +13,7 @@ class DatabaseTest extends FunSuite with Matchers {
 
   test("TODO ") {
     GameDb.init()
-
+    DBGameRepository.findAll()
   }
 
 

@@ -12,7 +12,9 @@ trait GameRepository {
 
   def getGame(id: Long): Future[Option[Game]]
 
-//  def maxId: Option[Long]
+  def findAll(): List[Game]
+
+  //  def maxId: Option[Long]
 }
 
 object DBGameRepository extends GameRepository {
@@ -29,5 +31,8 @@ object DBGameRepository extends GameRepository {
   override def getGame(id: Long): Future[Option[Game]] =
     DB.futureLocalTx(implicit session => Game.findById(id))
 
-//  override def maxId: Option[Long] = DB.readOnly(implicit session => Game.maxId)
+  //  override def maxId: Option[Long] = DB.readOnly(implicit session => Game.maxId)
+
+  override def findAll(): List[Game] = Game.allGames
+
 }

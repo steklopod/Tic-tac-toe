@@ -74,5 +74,12 @@ object Game extends SQLSyntaxSupport[Game] {
     sql.map(Game(g.resultName)).headOption().apply()
   }
 
+  def allGames: List[Game] = DB readOnly { implicit session =>
+    val sql = withSQL {
+      select.from(Game as g)
+    }.map(Game(g.resultName))
+
+    sql.list.apply()
+  }
 
 }
