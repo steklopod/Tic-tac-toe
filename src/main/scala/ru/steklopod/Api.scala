@@ -29,17 +29,22 @@ trait Api extends WithAuth {
 
   val route =
     pathPrefix("game") {
-      path(LongNumber) { id =>
-        get {
-          parameterMap { paramsMap =>
-            onSuccess(gameRepository.getGame(id)) {
-              case Some(game) =>
-                complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
-              case None =>
-                complete(StatusCodes.NotFound)
+      get {
+        parameters("limit".as[Int]) { (limit) =>
+          val limitGames = gameRepository.findAllLimit(limit)
+          complete(StatusCodes.OK -> limitGames.toJson)
+        } ~
+          path(LongNumber) { id =>
+            parameterMap { paramsMap =>
+              onSuccess(gameRepository.getGame(id)) {
+                case Some(game) =>
+                  println(paramsMap)
+                  complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
+                case None =>
+                  complete(StatusCodes.NotFound)
+              }
             }
           }
-        }
       }
     } ~ post {
       entity(as[Game]) { game =>
