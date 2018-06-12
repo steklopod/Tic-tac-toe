@@ -6,10 +6,10 @@ import akka.http.scaladsl.server.Directives._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
-import ru.steklopod.util.MyJsonProtocol._
 import spray.json._
-import scala.concurrent.ExecutionContext.Implicits.global
+import com.github.t3hnar.bcrypt._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -21,11 +21,10 @@ trait WithAuth {
     }
 }
 
-
 trait Api extends WithAuth {
+  import ru.steklopod.util.MyJsonProtocol._
+
   val gameRepository: GameRepository
-  val playerRepository: PlayerRepository
-  val validator = ScalaValidatorFactory.validator
 
   val route =
     pathPrefix("game") {
@@ -58,6 +57,28 @@ trait Api extends WithAuth {
       }
     }
 
+
+  val routeDebug =
+    pathPrefix("debug") {
+      path("reset") {
+        withAuth {
+          post {
+            complete(StatusCodes.OK -> "Data succesfully deleted from tables.")
+          }
+        }
+      }
+    }
+}
+
+//case class Session(name: String, value: String){}
+//object Session
+
+trait PlayerApi {
+  import ru.steklopod.util.PlayerJson._
+
+  val playerRepository: PlayerRepository
+  val validator = ScalaValidatorFactory.validator
+
   val routeUser =
     pathPrefix("user") {
       post {
@@ -70,7 +91,12 @@ trait Api extends WithAuth {
               val username = player.username
               val answer = Await.result(playerRepository.createPlayer(player), 2 second)
               answer match {
-                case ok if ok => complete(StatusCodes.OK -> s"User with name $username succesfully created")
+                case ok if ok => {
+                  val sessionUID = (username.bcrypt + System.currentTimeMillis().toString.bcrypt).bcrypt
+//                  complete(StatusCodes.OK -> ("session", sessionUID).toJson)
+                  complete(StatusCodes.OK -> sessionUID) //TODO
+                }
+                //                  JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
                 case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
               }
             }
@@ -81,7 +107,7 @@ trait Api extends WithAuth {
         parameterMap { paramsMap =>
           onSuccess(playerRepository.findByName(username)) {
             case Some(player) =>
-              complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields ++ Map("params" -> paramsMap.toJson)))
+              complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields)) //TODO
             case None =>
               complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
           }
@@ -89,14 +115,4 @@ trait Api extends WithAuth {
       }
     }
 
-  val routeDebug =
-    pathPrefix("debug") {
-      path("reset") {
-        withAuth {
-          post {
-            complete(StatusCodes.OK -> "Data succesfully deleted from tables.")
-          }
-        }
-      }
-    }
 }
