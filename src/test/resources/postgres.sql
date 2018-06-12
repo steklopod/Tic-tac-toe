@@ -26,7 +26,11 @@ DROP TABLE IF EXISTS player;
 CREATE TABLE IF NOT EXISTS player (
   id       SERIAL NOT NULL PRIMARY KEY,
   username VARCHAR(20) UNIQUE,
-  password VARCHAR(100)
+  password VARCHAR(100),
+  online BOOLEAN,
+  wins INT,
+  losses INT
+
 );
 TRUNCATE TABLE player CASCADE;
 

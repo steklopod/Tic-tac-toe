@@ -2,20 +2,20 @@ package ru.steklopod.entities
 
 import javax.validation.constraints.Size
 import scalikejdbc._
-
+import com.github.t3hnar.bcrypt._
 import scala.annotation.meta.field
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 final case class Player(id: Option[Long],
-                        @(Size@field)(min = 3, max = 20)username: String,
-                        @(Size@field)(min = 8, max = 100)password: String,
+                        @(Size@field)(min = 3, max = 20) username: String,
+                        @(Size@field)(min = 8, max = 100) password: Option[String],
                         online: Boolean,
                         wins: Int,
                         losses: Int
                        ) {
   def this(username: String, password: String) {
-    this(Option.empty[Long], username, password,false, 0, 0)
+    this(Option.empty[Long], username, Option(password), false, 0, 0)
   }
 }
 
@@ -26,7 +26,7 @@ object Player extends SQLSyntaxSupport[Player] {
     new Player(
       rs.longOpt(r.id),
       rs.string(r.username),
-      rs.string(r.password), //TODO - hash
+      rs.stringOpt(r.password), //TODO - hash
       rs.boolean(r.online),
       rs.int(r.wins),
       rs.int(r.losses)
@@ -37,7 +37,7 @@ object Player extends SQLSyntaxSupport[Player] {
   def create(player: Player)(implicit session: DBSession = AutoSession): Future[Boolean] = {
     val sql = withSQL(insert.into(Player).namedValues(
       column.username -> player.username,
-      column.password -> player.password,
+      column.password -> player.password.get.bcrypt,
       column.online -> player.online,
       column.wins -> player.wins,
       column.losses -> player.losses
@@ -65,8 +65,8 @@ object Player extends SQLSyntaxSupport[Player] {
     sql.map(Player(p.resultName)).headOption().apply()
   }
 
-//  sealed trait PlayerHelper
-//  object PlayerHelper{  }
+  //  sealed trait PlayerHelper
+  //  object PlayerHelper{  }
 
 
 }

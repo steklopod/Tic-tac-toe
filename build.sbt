@@ -35,6 +35,8 @@ libraryDependencies ++= Seq(
   "com.chuusai" %% "shapeless" % "2.3.3",
   //https://github.com/bean-validation-scala/bean-validation-scala
   "com.tsukaby" %% "bean-validation-scala" % "0.4.2",
+  //https://github.com/t3hnar/scala-bcrypt
+  "com.github.t3hnar" %% "scala-bcrypt" % "3.1",
   "com.h2database" % "h2" % "1.4.197" % Test
 )
 
