@@ -4,6 +4,7 @@ import java.sql.SQLException
 
 import ru.steklopod.entities.Player
 import scalikejdbc.DB
+import ru.steklopod.repositories.PlayerDb._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -20,7 +21,7 @@ trait PlayerRepository {
 
 object DBPlayerRepository extends PlayerRepository {
 //  GameDb.init()
-  Await.result(GameDb.createPlayerTableAndTestGamer(), Duration.Inf)
+  Await.result(PlayerDb.createPlayerTableAndTestGamer(), Duration.Inf)
 
   override def createPlayer(player: Player): Future[Boolean] =
     DB.futureLocalTx(implicit session => Player

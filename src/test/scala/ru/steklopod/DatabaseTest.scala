@@ -1,8 +1,8 @@
 package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
-import ru.steklopod.entities.Player
-import ru.steklopod.repositories.GameDb
+import ru.steklopod.entities.{Game, Player}
+import ru.steklopod.repositories.{DBGameRepository, GameDb}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -10,6 +10,12 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 class DatabaseTest extends FunSuite with Matchers {
+
+  test("TODO ") {
+    GameDb.init()
+
+  }
+
 
   test("Get existing user from table") {
     GameDb.init()
@@ -29,7 +35,6 @@ class DatabaseTest extends FunSuite with Matchers {
       case Some(s) => "Есть"
       case None => "Нет"
     }
-
     println(hasOrNo)
 
     val playerNotExist = Await.result(Player.findByName(username * 2), 2 second)

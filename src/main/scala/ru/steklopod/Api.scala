@@ -44,7 +44,6 @@ trait Api extends WithAuth {
     } ~ post {
       entity(as[Game]) { game =>
         complete {
-          //TODO - возврат id
           StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
         }
       }

@@ -6,16 +6,16 @@ import scalikejdbc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-final case class Game(id: Option[Long],
-                      nextStep: String,
-                      won: Option[String],
-                      finished: Boolean,
-                      players: String,
-                      steps: Int,
-                      size: Vector[Int],
-                      crossesLengthToWin: Int,
-                      fieldPlay: Vector[Vector[Int]]
-                     ) {
+case class Game(id: Option[Long],
+                nextStep: String,
+                won: Option[String],
+                finished: Boolean,
+                players: String,
+                steps: Int,
+                size: Vector[Int],
+                crossesLengthToWin: Int,
+                fieldPlay: Vector[Vector[Int]]
+               ) {
   def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int, fieldPlay: Vector[Vector[Int]]) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
   }
@@ -41,9 +41,9 @@ object Game extends SQLSyntaxSupport[Game] {
       rs.boolean(r.finished),
       rs.string(r.players),
       rs.int(r.steps),
-        convertSizeFromStrToVector(rs.string(r.size)),
+      convertSizeFromStrToVector(rs.string(r.size)),
       rs.int(r.crossesLengthToWin),
-        convertFieldFromStringToVector(rs.string(r.fieldPlay))
+      convertFieldFromStringToVector(rs.string(r.fieldPlay))
     )
 
   private val g = syntax
@@ -55,14 +55,14 @@ object Game extends SQLSyntaxSupport[Game] {
       column.finished -> game.finished,
       column.players -> game.players,
       column.steps -> game.steps,
-        column.size -> convertFieldFromVectorToStr(game.size),
+      column.size -> convertFieldFromVectorToStr(game.size),
       column.crossesLengthToWin -> game.crossesLengthToWin,
-        column.fieldPlay -> convertFieldFromVectorToString(makeFieldFromSize(game.size))
+      column.fieldPlay -> convertFieldFromVectorToString(makeFieldFromSize(game.size))
     ))
-//    Future {
-      sql.update().apply()
-//    }
-    game
+    //    Future {
+    val genId: Long = sql.updateAndReturnGeneratedKey().apply()
+    //    }
+    game.copy(id = Option(genId))
   }
 
   def findById(id: Long)(implicit s: DBSession = AutoSession): Future[Option[Game]] = Future {
@@ -73,4 +73,6 @@ object Game extends SQLSyntaxSupport[Game] {
     )
     sql.map(Game(g.resultName)).headOption().apply()
   }
+
+
 }

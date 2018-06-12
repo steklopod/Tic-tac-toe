@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS game (
 );
 TRUNCATE TABLE game;
 
+SELECT MAX(id) FROM GAME;
+
 -- player
 DROP TABLE IF EXISTS player;
 
@@ -26,4 +28,5 @@ CREATE TABLE IF NOT EXISTS player (
   password VARCHAR(100)
 );
 TRUNCATE TABLE player;
+
 

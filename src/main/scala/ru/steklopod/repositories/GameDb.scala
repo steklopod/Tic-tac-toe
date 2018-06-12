@@ -5,10 +5,8 @@ import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
 import ru.steklopod.util.GameFieldConverter
 import scalikejdbc._
-
+import ru.steklopod.repositories.PlayerDb._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
 
 object GameDb {
   val SHEMA_NAME = "game"
@@ -17,10 +15,10 @@ object GameDb {
     import com.zaxxer.hikari._
     private[this] lazy val dataSource: DataSource = {
       val ds = new HikariDataSource()
-      ds.setDriverClassName(DRIVER_H2_IN_MEMORY)
-      ds.setJdbcUrl(URL_H2_IN_MEMORY)
-      ds.setPassword(PSWRD_H2_IN_MEMORY)
-      ds.setUsername(LOGIN_H2_IN_MEMORY)
+      ds.setDriverClassName(DRIVER_MARIA_DB)
+      ds.setJdbcUrl(URL_MARIA)
+      ds.setPassword(PSWRD_MARIA)
+      ds.setUsername(LOGIN_MARIA)
       ds
     }
     def apply(): DataSource = dataSource
@@ -62,29 +60,6 @@ object GameDb {
 
       Game.create(new Game("Vasya", null, false, "Vasya, Nagibator",
         0, Vector(3,3), 3, GameFieldConverter.makeFieldFromSize(Vector(3,3))))
-    }
-  }
-
-  def createPlayerTableAndTestGamer(): Future[Boolean] = {
-    DB futureLocalTx { implicit session =>
-      sql"""
-            DROP TABLE IF EXISTS player;
-        """.execute.apply()
-
-      sql"""
-            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
-        """
-        .execute.apply()
-      Player.create(new Player("testName", "Test password"))
-    }
-  }
-
-  def truncatePlayer(): Boolean = {
-    DB autoCommit { implicit session =>
-      sql"""
-           TRUNCATE TABLE player
-        """
-        .execute.apply()
     }
   }
 

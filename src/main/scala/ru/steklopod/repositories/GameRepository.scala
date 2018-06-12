@@ -11,6 +11,8 @@ trait GameRepository {
   def createGame(game: Game): Game
 
   def getGame(id: Long): Future[Option[Game]]
+
+//  def maxId: Option[Long]
 }
 
 object DBGameRepository extends GameRepository {
@@ -18,12 +20,14 @@ object DBGameRepository extends GameRepository {
   GameDb.createSchema()
   GameDb.createGameTablesAndEmptyGame()
 
-//  override def createGame(game: Game): Future[Unit] =
-//    DB.futureLocalTx(implicit session => Game.create(game).map(_ => ()))
+  //  override def createGame(game: Game): Future[Unit] =
+  //    DB.futureLocalTx(implicit session => Game.create(game).map(_ => ()))
 
   override def createGame(game: Game): Game =
     DB.autoCommit(implicit session => Game.create(game))
 
   override def getGame(id: Long): Future[Option[Game]] =
     DB.futureLocalTx(implicit session => Game.findById(id))
+
+//  override def maxId: Option[Long] = DB.readOnly(implicit session => Game.maxId)
 }
