@@ -11,6 +11,8 @@ import scala.util.{Failure, Success}
 
 class DatabaseTest extends FunSuite with Matchers {
 
+
+
   test("Find all ") {
     GameDb.init()
     val allGames = DBGameRepository.findAll()

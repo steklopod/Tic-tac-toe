@@ -1,6 +1,5 @@
 package ru.steklopod.repositories
 
-import javax.sql.DataSource
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
 import ru.steklopod.util.GameFieldConverter
@@ -11,23 +10,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object GameDb {
   val SHEMA_NAME = "game"
 
-  object DataSource {
-    import com.zaxxer.hikari._
-    private[this] lazy val dataSource: DataSource = {
-      val ds = new HikariDataSource()
-      ds.setDriverClassName(DRIVER_MARIA_DB)
-      ds.setJdbcUrl(URL_MARIA)
-      ds.setPassword(PSWRD_MARIA)
-      ds.setUsername(LOGIN_MARIA)
-      ds
-    }
-    def apply(): DataSource = dataSource
-  }
-
   def init(): Unit = {
     ConnectionPool.singleton(new DataSourceConnectionPool(DataSource()))
   }
-
 
   def createSchema(): Boolean = {
     DB autoCommit { implicit session =>

@@ -9,9 +9,13 @@ import scala.concurrent.Future
 
 final case class Player(id: Option[Long],
                         @(Size@field)(min = 3, max = 20)username: String,
-                        @(Size@field)(min = 8, max = 100)password: String) {
+                        @(Size@field)(min = 8, max = 100)password: String,
+                        online: Boolean,
+                        wins: Int,
+                        losses: Int
+                       ) {
   def this(username: String, password: String) {
-    this(Option.empty[Long], username, password)
+    this(Option.empty[Long], username, password,false, 0, 0)
   }
 }
 
@@ -22,7 +26,10 @@ object Player extends SQLSyntaxSupport[Player] {
     new Player(
       rs.longOpt(r.id),
       rs.string(r.username),
-      rs.string(r.password) //TODO - hash
+      rs.string(r.password), //TODO - hash
+      rs.boolean(r.online),
+      rs.int(r.wins),
+      rs.int(r.losses)
     )
 
   private val p = syntax
@@ -30,7 +37,10 @@ object Player extends SQLSyntaxSupport[Player] {
   def create(player: Player)(implicit session: DBSession = AutoSession): Future[Boolean] = {
     val sql = withSQL(insert.into(Player).namedValues(
       column.username -> player.username,
-      column.password -> player.password
+      column.password -> player.password,
+      column.online -> player.online,
+      column.wins -> player.wins,
+      column.losses -> player.losses
     ))
     Future {
       sql.update().apply() == 1

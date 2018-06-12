@@ -79,7 +79,6 @@ object Game extends SQLSyntaxSupport[Game] {
       select.from(Game as g)
     }
       .map(Game(g.resultName))
-
     sql.list.apply()
   }
 
@@ -90,7 +89,6 @@ object Game extends SQLSyntaxSupport[Game] {
     }
       .map(Game(g.resultName))
       .list
-
     limitGames.apply()
   }
 
@@ -102,7 +100,6 @@ object Game extends SQLSyntaxSupport[Game] {
     }
       .map(Game(g.resultName))
       .list
-
     limitGames.apply()
   }
 

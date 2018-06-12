@@ -1,5 +1,6 @@
 package ru.steklopod.repositories
 
+import javax.sql.DataSource
 import ru.steklopod.repositories.GameDb._
 
 object ConnectionAccesNamesStore {
@@ -18,4 +19,18 @@ object ConnectionAccesNamesStore {
   val DRIVER_H2_IN_MEMORY = "org.h2.Driver"
   val LOGIN_H2_IN_MEMORY = ""
   val PSWRD_H2_IN_MEMORY = ""
+
+  object DataSource {
+    import com.zaxxer.hikari._
+    private[this] lazy val dataSource: DataSource = {
+      val ds = new HikariDataSource()
+      ds.setDriverClassName(DRIVER_MARIA_DB)
+      ds.setJdbcUrl(URL_MARIA)
+      ds.setPassword(PSWRD_MARIA)
+      ds.setUsername(LOGIN_MARIA)
+      ds
+    }
+    def apply(): DataSource = dataSource
+  }
+
 }

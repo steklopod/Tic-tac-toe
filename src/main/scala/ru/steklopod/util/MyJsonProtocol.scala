@@ -6,7 +6,7 @@ import spray.json.{DefaultJsonProtocol, DeserializationException, JsArray, JsBoo
 
 
 object MyJsonProtocol extends DefaultJsonProtocol with SprayJsonSupport {
-  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat3(Player.apply)
+  implicit val playerFormat: RootJsonFormat[Player] = jsonFormat6(Player.apply)
 
   implicit object GameJsonFormat extends RootJsonFormat[Game] {
     def write(g: Game) = JsObject(

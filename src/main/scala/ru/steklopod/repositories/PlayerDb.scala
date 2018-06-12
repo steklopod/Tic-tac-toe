@@ -15,7 +15,13 @@ object PlayerDb{
         """.execute.apply()
 
       sql"""
-            CREATE TABLE IF NOT EXISTS player (id SERIAL NOT NULL PRIMARY KEY, username VARCHAR(20) UNIQUE, password VARCHAR(100))
+            CREATE TABLE IF NOT EXISTS player (
+            id       SERIAL NOT NULL PRIMARY KEY,
+            username VARCHAR(20) UNIQUE,
+            password VARCHAR(100),
+            online BOOLEAN,
+            wins INT,
+            losses INT)
         """
         .execute.apply()
       Player.create(new Player("testName", "Test password"))
