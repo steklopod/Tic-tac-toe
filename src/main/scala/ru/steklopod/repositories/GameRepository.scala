@@ -14,6 +14,8 @@ trait GameRepository {
 
   def findAll(): List[Game]
 
+  def findAllLimit(max:Int): List[Game]
+
   //  def maxId: Option[Long]
 }
 
@@ -35,4 +37,5 @@ object DBGameRepository extends GameRepository {
 
   override def findAll(): List[Game] = Game.allGames
 
+  override def findAllLimit(max:Int): List[Game] = Game.findAllLimit(max:Int)
 }

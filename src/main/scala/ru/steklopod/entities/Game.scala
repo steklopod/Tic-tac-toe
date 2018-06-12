@@ -77,9 +77,21 @@ object Game extends SQLSyntaxSupport[Game] {
   def allGames: List[Game] = DB readOnly { implicit session =>
     val sql = withSQL {
       select.from(Game as g)
-    }.map(Game(g.resultName))
+    }
+      .map(Game(g.resultName))
 
     sql.list.apply()
+  }
+
+  def findAllLimit(max: Int): List[Game] = DB readOnly { implicit session =>
+    val limitGames = withSQL {
+      select.from(Game as g)
+        .limit(max)
+    }
+      .map(Game(g.resultName))
+      .list
+
+    limitGames.apply()
   }
 
 }

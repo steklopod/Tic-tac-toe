@@ -19,6 +19,8 @@ TRUNCATE TABLE game;
 
 SELECT MAX(id) FROM GAME;
 
+SELECT * FROM game LIMIT 2;
+
 -- player
 DROP TABLE IF EXISTS player;
 

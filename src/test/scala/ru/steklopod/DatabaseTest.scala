@@ -11,9 +11,19 @@ import scala.util.{Failure, Success}
 
 class DatabaseTest extends FunSuite with Matchers {
 
-  test("TODO ") {
+  test("Find all ") {
     GameDb.init()
-    DBGameRepository.findAll()
+    val allGames = DBGameRepository.findAll()
+    println("count of games: " + allGames.size)
+    allGames.foreach(println)
+  }
+
+  test("Find all limit") {
+    GameDb.init()
+    val limit = 2
+    val allGames = DBGameRepository.findAllLimit(2)
+    println("count of games: " + allGames.size)
+    allGames.foreach(println)
   }
 
 
