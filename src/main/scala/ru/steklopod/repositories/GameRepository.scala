@@ -14,9 +14,10 @@ trait GameRepository {
 
   def findAll(): List[Game]
 
-  def findAllLimit(max:Int): List[Game]
+  def findAll(max: Int): List[Game]
 
-  //  def maxId: Option[Long]
+  def findAll(max: Int, skip: Int): List[Game]
+
 }
 
 object DBGameRepository extends GameRepository {
@@ -24,8 +25,8 @@ object DBGameRepository extends GameRepository {
   GameDb.createSchema()
   GameDb.createGameTablesAndEmptyGame()
 
-  //  override def createGame(game: Game): Future[Unit] =
-  //    DB.futureLocalTx(implicit session => Game.create(game).map(_ => ()))
+//  override def createGame(game: Game): Future[Unit] =
+//    DB.futureLocalTx(implicit session => Game.create(game).map(_ => ()))
 
   override def createGame(game: Game): Game =
     DB.autoCommit(implicit session => Game.create(game))
@@ -33,9 +34,9 @@ object DBGameRepository extends GameRepository {
   override def getGame(id: Long): Future[Option[Game]] =
     DB.futureLocalTx(implicit session => Game.findById(id))
 
-  //  override def maxId: Option[Long] = DB.readOnly(implicit session => Game.maxId)
+  override def findAll(): List[Game] = Game.findAll
 
-  override def findAll(): List[Game] = Game.allGames
+  override def findAll(max: Int): List[Game] = Game.findAll(max: Int)
 
-  override def findAllLimit(max:Int): List[Game] = Game.findAllLimit(max:Int)
+  override def findAll(max: Int, skip: Int): List[Game] = Game.findAll(max: Int, skip: Int)
 }

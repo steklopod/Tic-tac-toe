@@ -30,8 +30,9 @@ trait Api extends WithAuth {
   val route =
     pathPrefix("game") {
       get {
-        parameters("limit".as[Int]) { (limit) =>
-          val limitGames = gameRepository.findAllLimit(limit)
+        //https://doc.akka.io/docs/akka-http/current/routing-dsl/directives/parameter-directives/parameters.html
+        parameters("limit".as[Int] ? 1, "offset".as[Int].?) { (limit, offset) =>
+          val limitGames = gameRepository.findAll(limit, offset.getOrElse(0))
           complete(StatusCodes.OK -> limitGames.toJson)
         } ~
           path(LongNumber) { id =>

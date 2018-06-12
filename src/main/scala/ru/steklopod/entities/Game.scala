@@ -74,7 +74,7 @@ object Game extends SQLSyntaxSupport[Game] {
     sql.map(Game(g.resultName)).headOption().apply()
   }
 
-  def allGames: List[Game] = DB readOnly { implicit session =>
+  def findAll: List[Game] = DB readOnly { implicit session =>
     val sql = withSQL {
       select.from(Game as g)
     }
@@ -83,10 +83,22 @@ object Game extends SQLSyntaxSupport[Game] {
     sql.list.apply()
   }
 
-  def findAllLimit(max: Int): List[Game] = DB readOnly { implicit session =>
+  def findAll(max: Int): List[Game] = DB readOnly { implicit session =>
     val limitGames = withSQL {
       select.from(Game as g)
         .limit(max)
+    }
+      .map(Game(g.resultName))
+      .list
+
+    limitGames.apply()
+  }
+
+  def findAll(max: Int, skip: Int): List[Game] = DB readOnly { implicit session =>
+    val limitGames = withSQL {
+      select.from(Game as g)
+        .limit(max)
+        .offset(skip)
     }
       .map(Game(g.resultName))
       .list

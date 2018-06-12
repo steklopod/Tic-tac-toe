@@ -21,7 +21,7 @@ class DatabaseTest extends FunSuite with Matchers {
   test("Find all limit") {
     GameDb.init()
     val limit = 2
-    val allGames = DBGameRepository.findAllLimit(2)
+    val allGames = DBGameRepository.findAll(2, 1)
     println("count of games: " + allGames.size)
     allGames.foreach(println)
   }
