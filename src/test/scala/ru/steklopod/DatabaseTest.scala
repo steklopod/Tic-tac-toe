@@ -1,7 +1,7 @@
 package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
-import ru.steklopod.entities.{Game, Player}
+import ru.steklopod.entities.Player
 import ru.steklopod.repositories.{DBGameRepository, GameDb}
 
 import scala.concurrent.Await
@@ -10,8 +10,6 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 class DatabaseTest extends FunSuite with Matchers {
-
-
 
   test("Find all ") {
     GameDb.init()
@@ -27,7 +25,6 @@ class DatabaseTest extends FunSuite with Matchers {
     println("count of games: " + allGames.size)
     allGames.foreach(println)
   }
-
 
   test("Get existing user from table") {
     GameDb.init()

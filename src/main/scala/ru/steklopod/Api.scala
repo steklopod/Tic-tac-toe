@@ -20,6 +20,7 @@ trait WithAuth {
 }
 
 trait Api extends WithAuth {
+
   import ru.steklopod.util.MyJsonProtocol._
 
   val gameRepository: GameRepository
@@ -68,8 +69,6 @@ trait Api extends WithAuth {
     }
 }
 
-//case class Session(name: String, value: String){}
-//object Session
 
 trait PlayerApi {
   import ru.steklopod.util.PlayerJson._
@@ -89,28 +88,24 @@ trait PlayerApi {
               val username = player.username
               val answer = Await.result(playerRepository.createPlayer(player), 2 second)
               answer match {
-                case ok if ok => {
-                  complete(StatusCodes.OK -> s"User with name [$username] succesfully created")
-                }
+                case ok if ok => complete(StatusCodes.OK -> s"User with name [$username] succesfully created")
                 case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
               }
             }
         }
-      }
-    } ~ get {
-      path(Segment) { username =>
-        parameterMap { paramsMap =>
+      } ~ get {
+        path(Segment) { username =>
           onSuccess(playerRepository.findByName(username)) {
-            case Some(player) =>
-              complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields)) //TODO
-            case None =>
-              complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
+            case Some(player) => complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields))
+            case None => complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
           }
         }
       }
     }
 
-//  val sessionUID = (username.bcrypt + System.currentTimeMillis().toString.bcrypt).bcrypt
-//  complete(StatusCodes.OK -> ("session" -> sessionUID).toJson)
+  //case class Session(name: String, value: String){}
+  //object Session
+  //  val sessionUID = (username.bcrypt + System.currentTimeMillis().toString.bcrypt).bcrypt
+  //  complete(StatusCodes.OK -> ("session" -> sessionUID).toJson)
 
 }
