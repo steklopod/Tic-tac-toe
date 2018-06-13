@@ -76,5 +76,4 @@ object Player extends SQLSyntaxSupport[Player] {
     limitGames.apply()
   }
 
-
 }

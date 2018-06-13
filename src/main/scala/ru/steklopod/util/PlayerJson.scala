@@ -7,8 +7,6 @@ import com.github.t3hnar.bcrypt._
 
 object PlayerJson extends DefaultJsonProtocol with SprayJsonSupport {
 
-  //    implicit val playerFormat = jsonFormat6(Player.apply)
-
   implicit object PlayerJsonFormat extends RootJsonFormat[Player] {
 
     override def read(json: JsValue): Player =
@@ -17,8 +15,7 @@ object PlayerJson extends DefaultJsonProtocol with SprayJsonSupport {
         case _ => deserializationError("Player expected")
       }
 
-
-    def write(p: Player): JsValue = JsObject(
+    override def write(p: Player): JsValue = JsObject(
       "username" -> JsString(p.username),
       "online" -> JsBoolean(p.online),
       "wins" -> JsNumber(p.wins),
@@ -26,6 +23,4 @@ object PlayerJson extends DefaultJsonProtocol with SprayJsonSupport {
     )
   }
 
-
-  //  implicit val playerFormat = jsonFormat(Player, "id", "username", "password", "online", "wins", "losses")
 }

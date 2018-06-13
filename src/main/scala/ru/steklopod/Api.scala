@@ -76,8 +76,13 @@ trait PlayerApi {
   val routeUser =
     pathPrefix("user") {
       post {
-        entity(as[Player]) {
-          player =>
+        pathPrefix("login") {
+          entity(as[Player]) { player =>
+            complete(StatusCodes.OK -> "ЕСТЬ >>>>>>>>>>")
+          }
+        } ~
+        pathEndOrSingleSlash {
+          entity(as[Player]) { player =>
             val violations = validator.validate(player)
             if (violations.nonEmpty) {
               complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
@@ -89,6 +94,7 @@ trait PlayerApi {
                 case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
               }
             }
+          }
         }
       } ~ get {
         parameters("limit".as[Int] ? 1, "offset".as[Int] ? 0) { (limit, offset) =>
