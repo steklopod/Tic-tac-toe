@@ -8,14 +8,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class Player(id: Option[Long],
-                        @(Size@field)(min = 3, max = 20) username: String,
-                        @(Size@field)(min = 8, max = 100) password: Option[String],
-                        online:  Option[Boolean],
-                        wins:  Option[Int],
-                        losses:  Option[Int]
-                       ) {
+                  @(Size@field)(min = 3, max = 20) username: String,
+                  @(Size@field)(min = 8, max = 100) password: Option[String],
+                  online: Boolean,
+                  wins: Int,
+                  losses: Int
+                 ) {
   def this(username: String, password: String) {
-    this(Option.empty[Long], username, Some(password), Some(false), Some(0), Some(0))
+    this(Option.empty[Long], username, Some(password), false, 0, 0)
   }
 }
 
@@ -27,9 +27,9 @@ object Player extends SQLSyntaxSupport[Player] {
       rs.longOpt(r.id),
       rs.string(r.username),
       rs.stringOpt(r.password), //TODO - hash
-      rs.booleanOpt(r.online),
-      rs.intOpt(r.wins),
-      rs.intOpt(r.losses)
+      rs.boolean(r.online),
+      rs.int(r.wins),
+      rs.int(r.losses)
     )
 
   private val p = syntax
@@ -64,8 +64,6 @@ object Player extends SQLSyntaxSupport[Player] {
     )
     sql.map(Player(p.resultName)).headOption().apply()
   }
-
-
 
 
 }

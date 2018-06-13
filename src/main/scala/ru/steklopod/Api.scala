@@ -92,7 +92,6 @@ trait PlayerApi {
                 case ok if ok => {
                   complete(StatusCodes.OK -> s"User with name [$username] succesfully created")
                 }
-                //                  JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
                 case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
               }
             }

@@ -12,7 +12,7 @@ class PlayerTest extends FunSuite{
 
   val validator = ScalaValidatorFactory.validator
 
-  test ("Player - POST"){
+  test ("Player - to JSON [create]"){
     val source =
       """
     {
@@ -24,5 +24,7 @@ class PlayerTest extends FunSuite{
     val game = jsonAst.convertTo[Player]
     println(game)
   }
+
+
 
 }
