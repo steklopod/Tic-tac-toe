@@ -6,6 +6,7 @@ import scalikejdbc._
 import scala.annotation.meta.field
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import com.github.t3hnar.bcrypt._
 
 case class Player(id: Option[Long],
                   @(Size@field)(min = 3, max = 20) username: String,
@@ -37,7 +38,7 @@ object Player extends SQLSyntaxSupport[Player] {
   def create(player: Player)(implicit session: DBSession = AutoSession): Future[Boolean] = {
     val sql = withSQL(insert.into(Player).namedValues(
       column.username -> player.username,
-      column.password -> player.password.get,
+      column.password -> player.password.get.bcrypt,
       column.online -> false,
       column.wins -> 0,
       column.losses -> 0

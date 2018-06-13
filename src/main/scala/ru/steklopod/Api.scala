@@ -7,6 +7,7 @@ import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
+import com.github.t3hnar.bcrypt._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -67,7 +68,6 @@ trait Api extends WithAuth {
 
 
 trait PlayerApi {
-
   import ru.steklopod.util.PlayerJson._
 
   val playerRepository: PlayerRepository
@@ -79,12 +79,23 @@ trait PlayerApi {
         entity(as[Player]) { player =>
           val violations = validator.validate(player)
           if (violations.nonEmpty) complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
+          val username = player.username
 
           pathPrefix("login") {
-            complete(StatusCodes.OK -> "ЕСТЬ >>>>>>>>>>")
+            onSuccess(playerRepository.findByName(username)) {
+              case Some(playerFromDB) => {
+                val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
+                if(isSamePswrd) {
+                  val sessionUID = (username + System.currentTimeMillis().toString).bcrypt // TODO - optimize/
+                  complete(StatusCodes.OK -> Map("session" -> sessionUID).toJson)
+                }else{
+                  complete(StatusCodes.Forbidden -> s"Wrong password. Try again.")
+                }
+              }
+              case None => complete(StatusCodes.Forbidden -> s"Player with name [$username] isn't exist")
+            }
           } ~
             pathEndOrSingleSlash {
-              val username = player.username
               val answer = Await.result(playerRepository.createPlayer(player), 2 second)
               answer match {
                 case ok if ok => complete(StatusCodes.OK -> s"User with name [$username] succesfully created")

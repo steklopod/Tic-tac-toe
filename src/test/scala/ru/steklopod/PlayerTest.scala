@@ -7,7 +7,7 @@ import ru.steklopod.util.PlayerJson._
 import spray.json._
 
 
-class PlayerTest extends FunSuite{
+class PlayerTest extends FunSuite with  DefaultJsonProtocol{
 //  val playerRepository: PlayerRepository
 
   val validator = ScalaValidatorFactory.validator
@@ -24,6 +24,17 @@ class PlayerTest extends FunSuite{
     val game = jsonAst.convertTo[Player]
     println(game)
   }
+
+
+  test ("Session JSON"){
+//    case class Session(session: String)
+//    implicit val sessionFormat = jsonFormat1(Session)
+    val json = Map( "ds" -> "$2a$10$Gkuw6ZCM").toJson
+    println(json)
+  }
+
+
+
 
 
 
