@@ -7,9 +7,7 @@ import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.{Game, Player}
 import ru.steklopod.repositories.{GameRepository, PlayerRepository}
 import spray.json._
-import com.github.t3hnar.bcrypt._
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -92,9 +90,7 @@ trait PlayerApi {
               val answer = Await.result(playerRepository.createPlayer(player), 2 second)
               answer match {
                 case ok if ok => {
-                  val sessionUID = (username.bcrypt + System.currentTimeMillis().toString.bcrypt).bcrypt
-//                  complete(StatusCodes.OK -> ("session", sessionUID).toJson)
-                  complete(StatusCodes.OK -> sessionUID) //TODO
+                  complete(StatusCodes.OK -> s"User with name [$username] succesfully created")
                 }
                 //                  JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
                 case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
@@ -114,5 +110,8 @@ trait PlayerApi {
         }
       }
     }
+
+//  val sessionUID = (username.bcrypt + System.currentTimeMillis().toString.bcrypt).bcrypt
+//  complete(StatusCodes.OK -> ("session" -> sessionUID).toJson)
 
 }

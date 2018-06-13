@@ -38,9 +38,9 @@ object Player extends SQLSyntaxSupport[Player] {
     val sql = withSQL(insert.into(Player).namedValues(
       column.username -> player.username,
       column.password -> player.password.get.bcrypt,
-      column.online -> player.online,
-      column.wins -> player.wins,
-      column.losses -> player.losses
+      column.online -> false,
+      column.wins -> 0,
+      column.losses -> 0
     ))
     Future {
       sql.update().apply() == 1
@@ -65,8 +65,7 @@ object Player extends SQLSyntaxSupport[Player] {
     sql.map(Player(p.resultName)).headOption().apply()
   }
 
-  //  sealed trait PlayerHelper
-  //  object PlayerHelper{  }
+
 
 
 }
