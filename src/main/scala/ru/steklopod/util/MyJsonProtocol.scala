@@ -1,7 +1,7 @@
 package ru.steklopod.util
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import ru.steklopod.entities.{Game, Player}
+import ru.steklopod.entities.Game
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsArray, JsBoolean, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 

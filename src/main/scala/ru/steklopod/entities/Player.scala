@@ -7,15 +7,15 @@ import scala.annotation.meta.field
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-final case class Player(id: Option[Long],
+case class Player(id: Option[Long],
                         @(Size@field)(min = 3, max = 20) username: String,
                         @(Size@field)(min = 8, max = 100) password: Option[String],
-                        online: Boolean,
-                        wins: Int,
-                        losses: Int
+                        online:  Option[Boolean],
+                        wins:  Option[Int],
+                        losses:  Option[Int]
                        ) {
   def this(username: String, password: String) {
-    this(Option.empty[Long], username, Option(password), false, 0, 0)
+    this(Option.empty[Long], username, Some(password), Some(false), Some(0), Some(0))
   }
 }
 
@@ -27,9 +27,9 @@ object Player extends SQLSyntaxSupport[Player] {
       rs.longOpt(r.id),
       rs.string(r.username),
       rs.stringOpt(r.password), //TODO - hash
-      rs.boolean(r.online),
-      rs.int(r.wins),
-      rs.int(r.losses)
+      rs.booleanOpt(r.online),
+      rs.intOpt(r.wins),
+      rs.intOpt(r.losses)
     )
 
   private val p = syntax
