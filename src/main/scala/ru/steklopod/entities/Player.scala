@@ -19,6 +19,7 @@ case class Player(id: Option[Long],
 }
 
 object Player extends SQLSyntaxSupport[Player] {
+
   override val tableName = "player"
 
   def apply(r: ResultName[Player])(rs: WrappedResultSet) =
@@ -62,6 +63,17 @@ object Player extends SQLSyntaxSupport[Player] {
         .where.eq(p.username, name)
     )
     sql.map(Player(p.resultName)).headOption().apply()
+  }
+
+  def findAll(max: Int, skip: Int): List[Player] = DB readOnly { implicit session =>
+    val limitGames = withSQL {
+      select.from(Player as p)
+        .limit(max)
+        .offset(skip)
+    }
+      .map(Player(p.resultName))
+      .list
+    limitGames.apply()
   }
 
 

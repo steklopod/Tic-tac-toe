@@ -4,13 +4,14 @@ import java.sql.SQLException
 
 import ru.steklopod.entities.Player
 import scalikejdbc.DB
-import ru.steklopod.repositories.PlayerDb._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
 trait PlayerRepository {
+  def findAll(limit: Int, offset: Int): List[Player]
+
   def createPlayer(player: Player): Future[Boolean]
 
   def getPlayer(id: Long): Future[Option[Player]]
@@ -20,7 +21,7 @@ trait PlayerRepository {
 }
 
 object DBPlayerRepository extends PlayerRepository {
-//  GameDb.init()
+  //  GameDb.init()
   Await.result(PlayerDb.createPlayerTableAndTestGamer(), Duration.Inf)
 
   override def createPlayer(player: Player): Future[Boolean] =
@@ -28,7 +29,7 @@ object DBPlayerRepository extends PlayerRepository {
       .create(player)
       .map(_ => true)
     )
-      .recover { case e: SQLException  => false }
+      .recover { case e: SQLException => false }
 
   override def getPlayer(id: Long): Future[Option[Player]] =
     DB.futureLocalTx(implicit session => Player.findById(id))
@@ -36,4 +37,5 @@ object DBPlayerRepository extends PlayerRepository {
   override def findByName(username: String): Future[Option[Player]] =
     DB.futureLocalTx(implicit session => Player.findByName(username))
 
+  override def findAll(limit: Int, offset: Int): List[Player] = Player.findAll(limit: Int, offset: Int)
 }

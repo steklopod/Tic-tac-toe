@@ -35,18 +35,14 @@ trait Api extends WithAuth {
             lazy val limitGames = gameRepository.findAll(limit, offset)
             complete(StatusCodes.OK -> limitGames.toJson)
           }
-        } ~
-          path(LongNumber) { id =>
-            parameterMap { paramsMap =>
-              onSuccess(gameRepository.getGame(id)) {
-                case Some(game) =>
-                  println(paramsMap)
-                  complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
-                case None =>
-                  complete(StatusCodes.NotFound)
-              }
-            }
+        } ~ path(LongNumber) { id =>
+          //            parameterMap { paramsMap =>
+          onSuccess(gameRepository.getGame(id)) {
+            case Some(game) => complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
+            case None => complete(StatusCodes.NotFound)
+            //              }
           }
+        }
       }
     } ~ post {
       entity(as[Game]) { game =>
@@ -71,6 +67,7 @@ trait Api extends WithAuth {
 
 
 trait PlayerApi {
+
   import ru.steklopod.util.PlayerJson._
 
   val playerRepository: PlayerRepository
@@ -94,7 +91,13 @@ trait PlayerApi {
             }
         }
       } ~ get {
-        path(Segment) { username =>
+        parameters("limit".as[Int] ? 1, "offset".as[Int] ? 0) { (limit, offset) =>
+          if (limit <= 0 | offset < 0) complete(StatusCodes.BadRequest -> "Please, make limit > 0 & offset >= 0")
+          else {
+            lazy val limitGames = playerRepository.findAll(limit, offset)
+            complete(StatusCodes.OK -> limitGames.toJson)
+          }
+        } ~ path(Segment) { username =>
           onSuccess(playerRepository.findByName(username)) {
             case Some(player) => complete(StatusCodes.OK -> JsObject(player.toJson.asJsObject.fields))
             case None => complete(StatusCodes.NotFound -> s"Player with name $username isn't exist")
