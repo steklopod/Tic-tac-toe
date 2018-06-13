@@ -5,10 +5,11 @@ import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import ru.steklopod.repositories.{DBGameRepository, DBPlayerRepository, GameRepository, PlayerRepository}
 import akka.http.scaladsl.server.Directives._
+import ru.steklopod.api.{GameApi, PlayerApi}
 
 import scala.io.StdIn
 
-object WebServer extends Api with PlayerApi{
+object WebServer extends GameApi with PlayerApi{
 
   def main(args: Array[String]) {
 
