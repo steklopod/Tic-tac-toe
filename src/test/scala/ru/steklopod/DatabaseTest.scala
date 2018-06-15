@@ -20,8 +20,8 @@ class DatabaseTest extends FunSuite with Matchers {
   test("Session ") {
     GameDb.init()
 
-    val isExist = PlayerDb.isSessionExist("edfefefe")
-    println("Has such session: " + isExist)
+    val isExist = PlayerDb.isSessionExist("a")
+    println(">>>Has such session: " + isExist)
   }
 
   test("Find all limit") {

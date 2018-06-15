@@ -55,12 +55,14 @@ object PlayerDb {
 
   def isSessionExist(sessionStr: String): Boolean = {
     DB readOnly { implicit session =>
-      val s: Option[String] = SQL("SELECT * FROM `sessions` where `session` = ?")
+      val s: Option[String] = SQL("SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND SESSION = ?")
         .bind(sessionStr)
         .map(rs => rs.string("session"))
         .single.apply()
       s.isDefined
     }
   }
+
+
 
 }

@@ -36,4 +36,21 @@ CREATE TABLE IF NOT EXISTS player (
 );
 TRUNCATE TABLE player;
 
+###########
+-- sessions
+CREATE TABLE IF NOT EXISTS sessions (
+  id      SERIAL NOT NULL PRIMARY KEY,
+  session TEXT,
+  created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  ON UPDATE CURRENT_TIMESTAMP);
 
+SELECT EXISTS(SELECT session FROM sessions where session = 'edfefefe');
+
+
+SELECT id FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE ) AND SESSION = ?;
+
+
+SELECT id FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE ) AND SESSION = ?
+
+
+SELECT CURRENT_TIMESTAMP;
