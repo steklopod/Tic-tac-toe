@@ -16,6 +16,7 @@ trait WithAuth {
     }
 }
 
+
 trait GameApi extends WithAuth {
 
   val gameRepository: GameRepository

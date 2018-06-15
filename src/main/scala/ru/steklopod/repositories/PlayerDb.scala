@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
-object PlayerDb{
+object PlayerDb {
 
   def createPlayerTableAndTestGamer(): Future[Boolean] = {
     DB futureLocalTx { implicit session =>
@@ -34,6 +34,32 @@ object PlayerDb{
            TRUNCATE TABLE player
         """
         .execute.apply()
+    }
+  }
+
+  def createSessionTable(): Boolean = {
+    DB autoCommit { implicit session =>
+      //      sql"""
+      //            DROP TABLE IF EXISTS sessions
+      //        """.execute.apply()
+      sql"""
+           CREATE TABLE IF NOT EXISTS sessions (
+             id      SERIAL NOT NULL PRIMARY KEY,
+             session TEXT,
+             created TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
+        """
+        .execute.apply()
+    }
+  }
+
+
+  def isSessionExist(sessionStr: String): Boolean = {
+    DB readOnly { implicit session =>
+      val s: Option[String] = SQL("SELECT * FROM `sessions` where `session` = ?")
+        .bind(sessionStr)
+        .map(rs => rs.string("session"))
+        .single.apply()
+      s.isDefined
     }
   }
 

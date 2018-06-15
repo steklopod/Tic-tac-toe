@@ -12,6 +12,7 @@ import spray.json.{JsObject, _}
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+
 trait PlayerApi {
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator
@@ -30,6 +31,7 @@ trait PlayerApi {
                 val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
                 if(isSamePswrd) {
                   val sessionUID = (username + System.currentTimeMillis().toString).bcrypt // TODO - optimize/
+
                   complete(StatusCodes.OK -> Map("session" -> sessionUID).toJson)
                 }else{
                   complete(StatusCodes.Forbidden -> s"Wrong password. Try again.")

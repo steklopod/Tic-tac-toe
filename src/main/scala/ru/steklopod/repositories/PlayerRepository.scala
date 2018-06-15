@@ -23,6 +23,7 @@ trait PlayerRepository {
 object DBPlayerRepository extends PlayerRepository {
   //  GameDb.init()
   Await.result(PlayerDb.createPlayerTableAndTestGamer(), Duration.Inf)
+  PlayerDb.createSessionTable()
 
   override def createPlayer(player: Player): Future[Boolean] =
     DB.futureLocalTx(implicit session => Player

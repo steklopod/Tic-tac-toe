@@ -1,3 +1,5 @@
+
+
 name := "Scala coursework"
 
 version := "0.1"
@@ -37,6 +39,8 @@ libraryDependencies ++= Seq(
   "com.tsukaby" %% "bean-validation-scala" % "0.4.2",
   //https://github.com/t3hnar/scala-bcrypt
   "com.github.t3hnar" %% "scala-bcrypt" % "3.1",
+  //https://github.com/softwaremill/akka-http-session/blob/master/example/src/main/scala/com/softwaremill/example/ScalaExample.scala
+  "com.softwaremill.akka-http-session" %% "core" % "0.5.5",
   "com.h2database" % "h2" % "1.4.197" % Test
 )
 

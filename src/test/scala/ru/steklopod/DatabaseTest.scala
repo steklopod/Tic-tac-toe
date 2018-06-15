@@ -2,7 +2,7 @@ package ru.steklopod
 
 import org.scalatest.{FunSuite, Matchers}
 import ru.steklopod.entities.Player
-import ru.steklopod.repositories.{DBGameRepository, GameDb}
+import ru.steklopod.repositories.{DBGameRepository, GameDb, PlayerDb}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,6 +16,12 @@ class DatabaseTest extends FunSuite with Matchers {
     val allGames = DBGameRepository.findAll()
     println("count of games: " + allGames.size)
     allGames.foreach(println)
+  }
+  test("Session ") {
+    GameDb.init()
+
+    val isExist = PlayerDb.isSessionExist("edfefefe")
+    println("Has such session: " + isExist)
   }
 
   test("Find all limit") {

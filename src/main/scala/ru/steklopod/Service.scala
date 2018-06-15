@@ -29,5 +29,4 @@ object WebServer extends GameApi with PlayerApi{
 
   override val gameRepository: GameRepository = DBGameRepository
   override val playerRepository: PlayerRepository = DBPlayerRepository
-
 }
