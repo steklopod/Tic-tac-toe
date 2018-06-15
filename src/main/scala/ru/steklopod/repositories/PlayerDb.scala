@@ -63,6 +63,14 @@ object PlayerDb {
     }
   }
 
+  def deleteOldSessions(): Boolean = {
+    DB autoCommit { implicit session =>
+      sql"""
+      DELETE FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+     """
+        .execute.apply()
+    }
+  }
 
 
 }

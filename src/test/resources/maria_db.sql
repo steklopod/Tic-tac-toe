@@ -47,10 +47,13 @@ CREATE TABLE IF NOT EXISTS sessions (
 SELECT EXISTS(SELECT session FROM sessions where session = 'edfefefe');
 
 
-SELECT id FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE ) AND SESSION = ?;
+SELECT session
+FROM sessions
+WHERE created < DATE_SUB(NOW(), INTERVAL 5 MINUTE);
 
-
-SELECT id FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE ) AND SESSION = ?
+DELETE
+FROM sessions
+WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE);
 
 
 SELECT CURRENT_TIMESTAMP;

@@ -17,11 +17,16 @@ class DatabaseTest extends FunSuite with Matchers {
     println("count of games: " + allGames.size)
     allGames.foreach(println)
   }
-  test("Session ") {
-    GameDb.init()
 
+  test("Session is Ok") {
+    GameDb.init()
     val isExist = PlayerDb.isSessionExist("a")
     println(">>>Has such session: " + isExist)
+  }
+
+  test("Delete old sessions") {
+    GameDb.init()
+    val isExist = PlayerDb.deleteOldSessions()
   }
 
   test("Find all limit") {
