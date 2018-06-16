@@ -3,10 +3,11 @@ package ru.steklopod.api
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
+import ru.steklopod.entities.Game
 import ru.steklopod.repositories.GameRepository
 import ru.steklopod.util.MyJsonProtocol._
 import spray.json._
-
+import ru.steklopod.repositories.PlayerDb._
 
 trait WithAuth {
   def withAuth: Directive0 = optionalHeaderValueByName("admin")
@@ -16,15 +17,15 @@ trait WithAuth {
     }
 }
 
-//trait WithSession {
-//  def withSession: Directive0 = optionalHeaderValueByName("session")
-//    .flatMap {
-//      case Some(uid) if isSessionExist(uid) => pass
-//      case _ => complete(StatusCodes.Unauthorized)
-//    }
-//}
+trait WithSession {
+  def withSession: Directive0 = optionalHeaderValueByName("session")
+    .flatMap {
+      case Some(uid) if isSessionExist(uid) => pass
+      case _ => complete(StatusCodes.Unauthorized -> "Session is finished")
+    }
+}
 
-trait GameApi extends WithAuth  /*with WithSession */{
+trait GameApi extends WithAuth with WithSession {
 
   val gameRepository: GameRepository
 
@@ -46,18 +47,17 @@ trait GameApi extends WithAuth  /*with WithSession */{
             //              }
           }
         }
+      } ~ withSession {
+        post {
+          entity(as[Game]) { game =>
+            complete {
+              StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
+            }
+          }
+        }
       }
     }
-//  ~
-//      withSession {
-//        post {
-//          entity(as[Game]) { game =>
-//            complete {
-//              StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
-//            }
-//          }
-//        }
-//      }
+
 
   val routeDebug =
     pathPrefix("debug") {

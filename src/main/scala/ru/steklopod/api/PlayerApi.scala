@@ -20,20 +20,19 @@ trait PlayerApi {
     pathPrefix("user") {
       post {
         entity(as[Player]) { player =>
-//          val violations = validator.validate(player)
-//          if (violations.nonEmpty) complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
+          val violations = validator.validate(player)
+          if (violations.nonEmpty) complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
           val username = player.username
 
           pathPrefix("login") {
-
             onSuccess(playerRepository.findByName(username)) {
               case Some(playerFromDB) => {
                 val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
-                if(isSamePswrd) {
+                if (isSamePswrd) {
                   val sessionUID = (username + System.currentTimeMillis().toString).bcrypt
-//                  PlayerDb.createSession(sessionUID) //TODO
+                  PlayerDb.createSession(sessionUID) //TODO
                   complete(StatusCodes.OK -> Map("session" -> sessionUID).toJson)
-                }else{
+                } else {
                   complete(StatusCodes.Forbidden -> s"Wrong password. Try again.")
                 }
               }
