@@ -18,10 +18,15 @@ class DatabaseTest extends FunSuite with Matchers {
     allGames.foreach(println)
   }
 
-  test("Session is Ok") {
+  test("Session is exist") {
     GameDb.init()
-    val isExist = PlayerDb.isSessionExist("a")
+    val isExist = PlayerDb.isSessionExist("b")
     println(">>>Has such session: " + isExist)
+  }
+
+  test("Session CREATE") {
+    GameDb.init()
+    PlayerDb.createSession("a")
   }
 
   test("Delete old sessions") {
@@ -49,7 +54,7 @@ class DatabaseTest extends FunSuite with Matchers {
       })
 
     //так лучше не делать:
-    val player = Await.result(Player.findByName(username), 2 second)
+    val player = Await.result(Player.findByName(username), 4 second)
 
     val hasOrNo = player match {
       case Some(s) => "Есть"

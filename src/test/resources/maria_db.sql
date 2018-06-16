@@ -44,8 +44,12 @@ CREATE TABLE IF NOT EXISTS sessions (
   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   ON UPDATE CURRENT_TIMESTAMP);
 
-SELECT EXISTS(SELECT session FROM sessions where session = 'edfefefe');
+SELECT EXISTS(SELECT session FROM sessions where session = 'abc');
 
+SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 20 MINUTE) AND SESSION = 'abc';
+
+
+INSERT INTO sessions ( session) VALUES ('?');
 
 SELECT session
 FROM sessions

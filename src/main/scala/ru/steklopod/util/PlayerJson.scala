@@ -21,5 +21,4 @@ object PlayerJson extends DefaultJsonProtocol with SprayJsonSupport {
       "losses" -> JsNumber(p.losses)
     )
   }
-
 }

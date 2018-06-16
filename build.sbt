@@ -19,14 +19,13 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % "10.1.0" % "test",
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.0",
   "io.spray" %% "spray-json" % "1.3.4",
-  "com.h2database" % "h2" % "1.4.197",
-  "org.mariadb.jdbc" % "mariadb-java-client" % "2.2.3",
-  "org.postgresql" % "postgresql" % "42.2.2",
+  "org.mariadb.jdbc" % "mariadb-java-client" % "2.2.5",
+//  "org.postgresql" % "postgresql" % "42.2.2",
   "com.typesafe.slick" %% "slick" % "3.2.3",
   "org.tpolecat" %% "doobie-core" % "0.5.1",
-  "org.scalikejdbc" %% "scalikejdbc" % "3.2.1",
-  "org.scalikejdbc" %% "scalikejdbc-config" % "3.2.1",
-  "org.scalikejdbc" %% "scalikejdbc-test" % "3.2.1" % "test",
+  "org.scalikejdbc" %% "scalikejdbc" % "3.2.3",
+  "org.scalikejdbc" %% "scalikejdbc-config" % "3.2.3",
+  "org.scalikejdbc" %% "scalikejdbc-test" % "3.2.3" % "test",
   "ch.qos.logback" % "logback-classic" % "1.2.1",
   "com.zaxxer" % "HikariCP" % "3.2.0",
   "com.typesafe.play" %% "anorm" % "2.5.3",
@@ -41,7 +40,11 @@ libraryDependencies ++= Seq(
   "com.github.t3hnar" %% "scala-bcrypt" % "3.1",
   //https://github.com/softwaremill/akka-http-session/blob/master/example/src/main/scala/com/softwaremill/example/ScalaExample.scala
   "com.softwaremill.akka-http-session" %% "core" % "0.5.5",
+  // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+  "mysql" % "mysql-connector-java" % "8.0.11",
   "com.h2database" % "h2" % "1.4.197" % Test
+//"com.h2database" % "h2" % "1.4.197",
+
 )
 
 testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework")

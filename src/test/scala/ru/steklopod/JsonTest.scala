@@ -9,9 +9,7 @@ import spray.json._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-
 class JsonTest extends FunSuite {
-
   test("JSON - read") {
     val source =
       """
@@ -43,8 +41,8 @@ class JsonTest extends FunSuite {
       println("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<DB")
       println(marshalledFromDb)
       println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-  }
 
+  }
 }
 
 

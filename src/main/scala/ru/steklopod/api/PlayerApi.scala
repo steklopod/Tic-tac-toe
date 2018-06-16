@@ -5,13 +5,12 @@ import akka.http.scaladsl.server.Directives.{as, complete, entity, get, onSucces
 import com.github.t3hnar.bcrypt._
 import com.tsukaby.bean_validation_scala.ScalaValidatorFactory
 import ru.steklopod.entities.Player
-import ru.steklopod.repositories.PlayerRepository
+import ru.steklopod.repositories.{PlayerDb, PlayerRepository}
 import ru.steklopod.util.PlayerJson._
-import spray.json.{JsObject, _}
+import spray.json._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
-
 
 trait PlayerApi {
   val playerRepository: PlayerRepository
@@ -21,17 +20,18 @@ trait PlayerApi {
     pathPrefix("user") {
       post {
         entity(as[Player]) { player =>
-          val violations = validator.validate(player)
-          if (violations.nonEmpty) complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
+//          val violations = validator.validate(player)
+//          if (violations.nonEmpty) complete(StatusCodes.BadRequest -> "Name must be from 4 to 20 chars.")
           val username = player.username
 
           pathPrefix("login") {
+
             onSuccess(playerRepository.findByName(username)) {
               case Some(playerFromDB) => {
                 val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
                 if(isSamePswrd) {
-                  val sessionUID = (username + System.currentTimeMillis().toString).bcrypt // TODO - optimize/
-
+                  val sessionUID = (username + System.currentTimeMillis().toString).bcrypt
+//                  PlayerDb.createSession(sessionUID) //TODO
                   complete(StatusCodes.OK -> Map("session" -> sessionUID).toJson)
                 }else{
                   complete(StatusCodes.Forbidden -> s"Wrong password. Try again.")
@@ -41,7 +41,7 @@ trait PlayerApi {
             }
           } ~
             pathEndOrSingleSlash {
-              val answer = Await.result(playerRepository.createPlayer(player), 2 second)
+              val answer = Await.result(playerRepository.createPlayer(player), 5 second)
               answer match {
                 case ok if ok => complete(StatusCodes.OK -> s"User with name [$username] succesfully created")
                 case false => complete(StatusCodes.Conflict -> s"Player `$username` is existing. Please, choose another name.")
@@ -63,5 +63,4 @@ trait PlayerApi {
         }
       }
     }
-
 }

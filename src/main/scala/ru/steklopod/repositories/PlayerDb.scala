@@ -39,27 +39,33 @@ object PlayerDb {
 
   def createSessionTable(): Boolean = {
     DB autoCommit { implicit session =>
-      //      sql"""
-      //            DROP TABLE IF EXISTS sessions
-      //        """.execute.apply()
+      sql"""
+                  DROP TABLE IF EXISTS sessions
+         """.execute.apply()
       sql"""
            CREATE TABLE IF NOT EXISTS sessions (
              id      SERIAL NOT NULL PRIMARY KEY,
              session TEXT,
              created TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
-        """
-        .execute.apply()
+        """.execute.apply()
     }
   }
 
-
-  def isSessionExist(sessionStr: String): Boolean = {
+  def isSessionExist(sessionValue: String): Boolean = {
     DB readOnly { implicit session =>
-      val s: Option[String] = SQL("SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND SESSION = ?")
-        .bind(sessionStr)
+      val s: Option[String] = SQL("SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND `session` = ?")
+        .bind(sessionValue)
         .map(rs => rs.string("session"))
         .single.apply()
       s.isDefined
+    }
+  }
+
+  def createSession(sessionValue: String): Boolean = {
+    DB autoCommit { implicit session =>
+      SQL("INSERT INTO sessions ( session) VALUES (?)")
+        .bind(sessionValue)
+        .execute.apply()
     }
   }
 
@@ -67,10 +73,8 @@ object PlayerDb {
     DB autoCommit { implicit session =>
       sql"""
       DELETE FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)
-     """
-        .execute.apply()
+     """.execute.apply()
     }
   }
-
 
 }
