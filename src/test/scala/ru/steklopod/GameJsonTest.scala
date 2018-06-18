@@ -9,7 +9,8 @@ import spray.json._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class JsonTest extends FunSuite {
+class GameJsonTest extends FunSuite {
+
   test("JSON - read") {
     val source =
       """
@@ -25,6 +26,7 @@ class JsonTest extends FunSuite {
     println(game)
   }
 
+
   test("JSON - write") {
     GameDb.init()
 
@@ -34,13 +36,11 @@ class JsonTest extends FunSuite {
     val marshalled = game.toJson
       println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>NEW")
       println(marshalled)
-      println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     val gameFromDB = Await.result(DBGameRepository.getGame(1L), 2 second).get
     val marshalledFromDb = gameFromDB.toJson
       println("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<DB")
       println(marshalledFromDb)
-      println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
   }
 }

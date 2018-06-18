@@ -40,7 +40,7 @@ object PlayerDb {
   def createSessionTable(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""
-                  DROP TABLE IF EXISTS sessions
+           DROP TABLE IF EXISTS sessions
          """.execute.apply()
       sql"""
            CREATE TABLE IF NOT EXISTS sessions (
@@ -68,7 +68,6 @@ object PlayerDb {
         .execute.apply()
     }
   }
-
 
   def deleteSession(sessionValue: String): Boolean = {
     DB autoCommit { implicit session =>
