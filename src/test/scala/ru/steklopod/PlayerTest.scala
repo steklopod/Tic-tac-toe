@@ -25,8 +25,8 @@ class PlayerTest extends FunSuite with  DefaultJsonProtocol{
     }
      """
     val jsonAst = source.parseJson // or JsonParser(source)
-    val game = jsonAst.convertTo[Player]
-    println(game)
+    val user: Player = jsonAst.convertTo[Player]
+    println(user)
   }
 
 

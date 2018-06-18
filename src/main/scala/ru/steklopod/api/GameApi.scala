@@ -40,7 +40,7 @@ trait GameApi extends WithAuth with WithSession {
             complete(StatusCodes.OK -> limitGames.toJson)
           }
         } ~ path(LongNumber) { id =>
-          //            parameterMap { paramsMap =>
+//            parameterMap { paramsMap =>
           onSuccess(gameRepository.getGame(id)) {
             case Some(game) => complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
             case None => complete(StatusCodes.NotFound)

@@ -23,7 +23,9 @@ class GameJsonTest extends FunSuite {
      """
     val jsonAst = source.parseJson // or JsonParser(source)
     val game = jsonAst.convertTo[Game]
-    println(game)
+//    println(game)
+//    <= min(size(0), size(1)) и >= 3 ( [3;min(size(0), size(1)] )
+    Game.printGame(game)
   }
 
 

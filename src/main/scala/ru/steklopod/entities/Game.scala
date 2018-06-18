@@ -62,6 +62,7 @@ object Game extends SQLSyntaxSupport[Game] {
     //    Future {
     val genId: Long = sql.updateAndReturnGeneratedKey().apply()
     //    }
+    printGame(game)
     game.copy(id = Option(genId))
   }
 
@@ -101,6 +102,17 @@ object Game extends SQLSyntaxSupport[Game] {
       .map(Game(g.resultName))
       .list
     limitGames.apply()
+  }
+
+  def printGame(game: Game): Unit ={
+    val players = game.players.split(",")
+    println("Player 1: " + players(0).trim())
+    println("Player 2: " + players(1).trim())
+    println("\n")
+
+    game.fieldPlay
+      .foreach(row => println(row.mkString("[", " | ", "]")))
+    println("\n")
   }
 
 }
