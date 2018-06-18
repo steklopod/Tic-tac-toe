@@ -40,7 +40,7 @@ trait GameApi extends WithAuth with WithSession {
             complete(StatusCodes.OK -> limitGames.toJson)
           }
         } ~ path(LongNumber) { id =>
-//            parameterMap { paramsMap =>
+          //            parameterMap { paramsMap =>
           onSuccess(gameRepository.getGame(id)) {
             case Some(game) => complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
             case None => complete(StatusCodes.NotFound)
@@ -49,7 +49,16 @@ trait GameApi extends WithAuth with WithSession {
         }
       } ~ withSession {
         post {
-          entity(as[Game]) { game =>
+          path(LongNumber) { id =>
+            onSuccess(gameRepository.getGame(id)) {
+              case Some(game) => {
+                //TODO - доделать
+
+                complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields))
+              }
+              case None => complete(StatusCodes.NotFound)
+            }
+          } ~ entity(as[Game]) { game =>
             complete {
               StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
             }
