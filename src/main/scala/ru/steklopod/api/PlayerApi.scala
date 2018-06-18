@@ -41,15 +41,12 @@ trait PlayerApi extends WithSession {
           } ~ pathPrefix("logout") {
             withSession {
               headerValueByName("session") { sessionValue =>
-
-                println(">>>>>>>>>> " + sessionValue)
-
                 onSuccess(playerRepository.findByName(username)) {
                   case Some(playerFromDB) => {
-                    val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
-                    if (isSamePswrd) {
-                      //                  PlayerDb.createSession(sessionUID)
-                      complete(StatusCodes.OK -> "Logout os succesful")
+                    val hasSuchPswrd = player.password.get.isBcrypted(playerFromDB.password.get)
+                    if (hasSuchPswrd) {
+                      PlayerDb.deleteSession(sessionValue)
+                      complete(StatusCodes.OK -> "Logout is successful")
                     } else {
                       complete(StatusCodes.Unauthorized -> s"Wrong password. Try again.")
                     }

@@ -69,6 +69,15 @@ object PlayerDb {
     }
   }
 
+
+  def deleteSession(sessionValue: String): Boolean = {
+    DB autoCommit { implicit session =>
+      SQL("DELETE FROM sessions WHERE `session` = ?")
+        .bind(sessionValue)
+        .execute.apply()
+    }
+  }
+
   def deleteOldSessions(): Boolean = {
     DB autoCommit { implicit session =>
       sql"""

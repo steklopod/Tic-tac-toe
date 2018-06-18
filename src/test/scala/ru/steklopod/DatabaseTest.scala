@@ -26,7 +26,12 @@ class DatabaseTest extends FunSuite with Matchers {
 
   test("Session CREATE") {
     GameDb.init()
-    PlayerDb.createSession("a")
+    PlayerDb.createSession("$2a$10$SjInPRoSm3iSItFKZA1uBuUyCWfcx6ahbxdHAvOVt/rBOobWOKl66")
+  }
+
+  test("Session DELETE") {
+    GameDb.init()
+    PlayerDb.deleteSession("$2a$10$SjInPRoSm3iSItFKZA1uBuUyCWfcx6ahbxdHAvOVt/rBOobWOKl66")
   }
 
   test("Delete old sessions") {
