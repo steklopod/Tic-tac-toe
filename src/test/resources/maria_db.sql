@@ -48,8 +48,9 @@ SELECT EXISTS(SELECT session FROM sessions where session = 'abc');
 
 SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 20 MINUTE) AND SESSION = 'abc';
 
+INSERT INTO `sessions` (session)
+VALUES ($2a$10$ilYozpv4TYAiL9Jn6XedjeJ5QGZwPlgLyM.Ctjg5foBVDyxJYB8 / C);
 
-INSERT INTO sessions ( session) VALUES ('?');
 
 SELECT session
 FROM sessions

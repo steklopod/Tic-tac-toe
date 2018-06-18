@@ -61,11 +61,10 @@ object PlayerDb {
     }
   }
 
-  def createSession(sessionValue: String): Boolean = {
+  def createSession(sessionValue: String) = {
     DB autoCommit { implicit session =>
-      SQL("INSERT INTO sessions ( session) VALUES (?)")
-        .bind(sessionValue)
-        .execute.apply()
+      SQL(s"INSERT INTO `sessions` (session) VALUES ('${sessionValue}')")
+        .update.apply()
     }
   }
 
