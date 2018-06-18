@@ -7,29 +7,34 @@ import ru.steklopod.util.PlayerJson._
 
 class SessionTest extends FunSuite with Matchers {
 
-  test("Session is exist") {
+  private [this] val sessionValue = "$2a$10$SjInPRoSm"
+
+  test("CREATE by name") {
     GameDb.init()
-    val isExist = PlayerDb.isSessionExist("b")
-    println(">>>Has such session: " + isExist)
+    PlayerDb.createSession(sessionValue)
   }
 
-  test("Session CREATE") {
+  test("IS EXIST?") {
     GameDb.init()
-    PlayerDb.createSession("$2a$10$SjInPRoSm3iSItFKZA1uBuUyCWfcx6ahbxdHAvOVt/rBOobWOKl66")
+    val isExist = PlayerDb.isSessionExist(sessionValue)
+
+    isExist should be(true)
   }
 
-  test("Session DELETE") {
+  test("DELETE by name") {
     GameDb.init()
-    PlayerDb.deleteSession("$2a$10$SjInPRoSm3iSItFKZA1uBuUyCWfcx6ahbxdHAvOVt/rBOobWOKl66")
+    PlayerDb.deleteSession(sessionValue)
+
+    PlayerDb.isSessionExist(sessionValue) should be (false)
   }
 
-  test("Delete old sessions") {
+  test("DELETE old") {
     GameDb.init()
-    val isExist = PlayerDb.deleteOldSessions
+    PlayerDb.deleteOldSessions
   }
 
-  test ("Session JSON"){
-    val json = Map( "session" -> "$2a$10$Gkuw6ZCM").toJson
+  test ("to JSON"){
+    val json = Map( "session" -> sessionValue).toJson
     println(json)
   }
 
