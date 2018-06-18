@@ -12,7 +12,7 @@ import spray.json._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-trait PlayerApi {
+trait PlayerApi extends WithSession {
   val playerRepository: PlayerRepository
   val validator = ScalaValidatorFactory.validator
 
@@ -30,13 +30,33 @@ trait PlayerApi {
                 val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
                 if (isSamePswrd) {
                   val sessionUID = (username + System.currentTimeMillis().toString).bcrypt
-                  PlayerDb.createSession(sessionUID) //TODO
+                  PlayerDb.createSession(sessionUID)
                   complete(StatusCodes.OK -> Map("session" -> sessionUID).toJson)
                 } else {
                   complete(StatusCodes.Forbidden -> s"Wrong password. Try again.")
                 }
               }
               case None => complete(StatusCodes.Forbidden -> s"Player with name [$username] isn't exist")
+            }
+          } ~ pathPrefix("logout") {
+            withSession {
+              headerValueByName("session") { sessionValue =>
+
+                println(">>>>>>>>>> " + sessionValue)
+
+                onSuccess(playerRepository.findByName(username)) {
+                  case Some(playerFromDB) => {
+                    val isSamePswrd = player.password.get.isBcrypted(playerFromDB.password.get)
+                    if (isSamePswrd) {
+                      //                  PlayerDb.createSession(sessionUID)
+                      complete(StatusCodes.OK -> "Logout os succesful")
+                    } else {
+                      complete(StatusCodes.Unauthorized -> s"Wrong password. Try again.")
+                    }
+                  }
+                  case None => complete(StatusCodes.Forbidden -> s"Player with name [$username] isn't exist")
+                }
+              }
             }
           } ~
             pathEndOrSingleSlash {

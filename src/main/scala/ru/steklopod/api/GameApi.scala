@@ -21,7 +21,7 @@ trait WithSession {
   def withSession: Directive0 = optionalHeaderValueByName("session")
     .flatMap {
       case Some(uid) if isSessionExist(uid) => pass
-      case _ => complete(StatusCodes.Unauthorized -> "Session is finished")
+      case _ => complete(StatusCodes.Unauthorized -> "Session is finished or not exist in header.")
     }
 }
 

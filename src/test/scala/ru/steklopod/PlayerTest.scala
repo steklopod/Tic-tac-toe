@@ -8,7 +8,6 @@ import spray.json._
 
 
 class PlayerTest extends FunSuite with  DefaultJsonProtocol{
-//  val playerRepository: PlayerRepository
 
   val validator = ScalaValidatorFactory.validator
 
@@ -16,8 +15,8 @@ class PlayerTest extends FunSuite with  DefaultJsonProtocol{
     val source =
       """
     {
-     "username": "vasya",
-     "password": "c4Gf4g4g"
+     "username": "testName",
+     "password": "Test password"
     }
      """
     val jsonAst = source.parseJson // or JsonParser(source)
@@ -27,14 +26,9 @@ class PlayerTest extends FunSuite with  DefaultJsonProtocol{
 
 
   test ("Session JSON"){
-//    case class Session(session: String)
-//    implicit val sessionFormat = jsonFormat1(Session)
-    val json = Map( "ds" -> "$2a$10$Gkuw6ZCM").toJson
+    val json = Map( "session" -> "$2a$10$Gkuw6ZCM").toJson
     println(json)
   }
-
-
-
 
 
 
