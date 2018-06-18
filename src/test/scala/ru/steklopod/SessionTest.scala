@@ -3,6 +3,7 @@ package ru.steklopod
 import org.scalatest.{FunSuite, Matchers}
 import ru.steklopod.repositories.{GameDb, PlayerDb}
 import spray.json._
+import ru.steklopod.util.PlayerJson._
 
 class SessionTest extends FunSuite with Matchers {
 
@@ -24,7 +25,7 @@ class SessionTest extends FunSuite with Matchers {
 
   test("Delete old sessions") {
     GameDb.init()
-    val isExist = PlayerDb.deleteOldSessions()
+    val isExist = PlayerDb.deleteOldSessions
   }
 
   test ("Session JSON"){

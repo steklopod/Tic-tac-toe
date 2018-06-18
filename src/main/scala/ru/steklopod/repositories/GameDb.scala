@@ -1,11 +1,10 @@
 package ru.steklopod.repositories
 
-import ru.steklopod.entities.{Game, Player}
+import ru.steklopod.entities.Game
 import ru.steklopod.repositories.ConnectionAccesNamesStore._
+import ru.steklopod.repositories.PlayerDb._
 import ru.steklopod.util.GameFieldConverter
 import scalikejdbc._
-import ru.steklopod.repositories.PlayerDb._
-import scala.concurrent.ExecutionContext.Implicits.global
 
 object GameDb {
   val SHEMA_NAME = "game"
