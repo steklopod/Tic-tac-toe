@@ -50,21 +50,29 @@ trait GameApi extends WithAuth with WithSession {
       } ~ withSession {
         post {
           path(LongNumber) { id =>
-            onSuccess(gameRepository.getGame(id)) {
-              case Some(game) => {
-                //TODO - доделать
+            entity(as[JsValue]) { json =>
+              val step = json.asJsObject.fields("step").convertTo[List[Int]]
 
-                complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields))
+
+              println(">>>>>>>>>>>>>>>" + step.head + step.tail +" <<<<<<"+ step)
+
+              onSuccess(gameRepository.getGame(id)) {
+                case Some(game) => {
+                  //TODO - доделать
+
+                  //                  complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields))
+                  complete(StatusCodes.OK -> JsArray(step.toJson))
+                }
+                case None => complete(StatusCodes.NotFound)
               }
-              case None => complete(StatusCodes.NotFound)
             }
           } ~ entity(as[Game]) { game =>
             complete {
               StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
             }
+            }
           }
         }
-      }
     }
 
 

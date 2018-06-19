@@ -14,7 +14,7 @@ case class Game(id: Option[Long],
                 steps: Int,
                 size: Vector[Int],
                 crossesLengthToWin: Int,
-                fieldPlay: Vector[Vector[Int]]
+                var fieldPlay: Vector[Vector[Int]]
                ) {
   def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int, fieldPlay: Vector[Vector[Int]]) {
     this(Option.empty[Long], nextStep, won, finished, players, steps, size, crossesLengthToWin, fieldPlay)
@@ -25,7 +25,7 @@ case class Game(id: Option[Long],
   }
 
   def this(opponent: String, size: Vector[Int], firstStepBy: String, crossesLengthToWin: Int) {
-    this(firstStepBy, None, false, "Robot, " + opponent, 0, size, crossesLengthToWin, makeFieldFromSize(size))
+    this(firstStepBy, None, false, firstStepBy + ", " + opponent, 0, size, crossesLengthToWin, makeFieldFromSize(size))
   }
 }
 
