@@ -27,17 +27,11 @@ class GameDBTest extends FunSuite with Matchers {
 
     val step = List(0, 1)
 
-    var field = game.fieldPlay
-    val row = game.fieldPlay(step.head).updated(step(1), 1)
-    val newField: Vector[Vector[Int]]  = field.updated(0, row)
-//TODO
-//    game.fieldPlay_= newField
-
+    val newField = Game.makeStep(game, step)
+    game.fieldPlay = newField
     println("AFTER:")
-    println(row)
-    println(field)
-    println(newField)
-  }
 
+    println(game)
+  }
 
 }

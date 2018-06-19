@@ -115,4 +115,10 @@ object Game extends SQLSyntaxSupport[Game] {
     println("\n")
   }
 
+  def makeStep(game: Game, step: List[Int]):Vector[Vector[Int]] = {
+    var field = game.fieldPlay
+    val row = game.fieldPlay(step.head).updated(step(1), 1)
+    field.updated(0, row)
+  }
+
 }
