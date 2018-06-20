@@ -19,7 +19,7 @@ object GameFieldConverter {
 
   @throws(classOf[IllegalArgumentException])
   def convertFieldFromVectorToStr(sizeOfPlayField: Vector[Int]): String = {
-    require(sizeOfPlayField.size == 2, "Field size must have 2 elements: height & width only.")
+    require(sizeOfPlayField.size == 2, "Field size must have 2 elements: HEIGHT & WIDTH only.")
     sizeOfPlayField.toArray[Int].toJson.toString()
   }
 

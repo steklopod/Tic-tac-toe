@@ -66,6 +66,16 @@ object Game extends SQLSyntaxSupport[Game] {
     game.copy(id = Option(genId))
   }
 
+  def updateField(game: Game, gameId: Int): Int = {
+    DB autoCommit { implicit session =>
+      val sql = withSQL(update(Game).set(
+        column.fieldPlay -> convertFieldFromVectorToString(game.fieldPlay)
+      )
+        .where.eq(column.id, gameId))
+      sql.update.apply()
+    }
+  }
+
   def findById(id: Long)(implicit s: DBSession = AutoSession): Future[Option[Game]] = Future {
     val sql = withSQL(
       select
@@ -74,6 +84,7 @@ object Game extends SQLSyntaxSupport[Game] {
     )
     sql.map(Game(g.resultName)).headOption().apply()
   }
+
 
   def findAll: List[Game] = DB readOnly { implicit session =>
     val sql = withSQL {
@@ -104,7 +115,7 @@ object Game extends SQLSyntaxSupport[Game] {
     limitGames.apply()
   }
 
-  def printGame(game: Game): Unit ={
+  def printGame(game: Game): Unit = {
     val players = game.players.split(",")
     println("Player 1: " + players(0).trim())
     println("Player 2: " + players(1).trim())
@@ -115,10 +126,19 @@ object Game extends SQLSyntaxSupport[Game] {
     println("\n")
   }
 
-  def makeStep(game: Game, step: List[Int]):Vector[Vector[Int]] = {
+  @throws(classOf[IllegalArgumentException])
+  def makeStep(game: Game, step: List[Int]): Vector[Vector[Int]] = {
+    require(step.size == 2, "Step must contains only 2 elements")
+    val width = game.size.head
+    val hieight = game.size(1)
+    val w = step.head
+    val h = step(1)
+    require(width > w && hieight > h, s"Out Of Bounds. Please, set WIDTH > ${w} & HIEIGHT > ${h}.")
     var field = game.fieldPlay
-    val row = game.fieldPlay(step.head).updated(step(1), 1)
-    field.updated(0, row)
+    var row = game.fieldPlay(w).updated(h, 6)
+    game.fieldPlay = field.updated(w, row)
+    game.fieldPlay
   }
+
 
 }
