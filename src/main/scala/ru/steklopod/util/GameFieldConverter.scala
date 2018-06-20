@@ -27,7 +27,6 @@ object GameFieldConverter {
   final case object ThreeByThree extends GameFieldConverter {
     override def toString: String = "[3, 3]"
   }
-
 }
 
 sealed trait GameFieldConverter

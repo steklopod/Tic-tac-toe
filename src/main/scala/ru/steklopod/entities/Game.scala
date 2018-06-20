@@ -66,7 +66,7 @@ object Game extends SQLSyntaxSupport[Game] {
     game.copy(id = Option(genId))
   }
 
-  def updateField(game: Game, gameId: Int): Int = {
+  def updateField(game: Game, gameId: Long): Int = {
     DB autoCommit { implicit session =>
       val sql = withSQL(update(Game).set(
         column.fieldPlay -> convertFieldFromVectorToString(game.fieldPlay)
@@ -128,14 +128,15 @@ object Game extends SQLSyntaxSupport[Game] {
 
   @throws(classOf[IllegalArgumentException])
   def makeStep(game: Game, step: List[Int]): Vector[Vector[Int]] = {
-    require(step.size == 2, "Step must contains only 2 elements")
+      require(step.size == 2, "Step must contains only 2 elements")
     val width = game.size.head
     val hieight = game.size(1)
     val w = step.head
     val h = step(1)
-    require(width > w && hieight > h, s"Out Of Bounds. Please, set WIDTH > ${w} & HIEIGHT > ${h}.")
+      require(width > w, s"Out of bounds. Please, set Vertical Row < ${width}.")
+      require(hieight > h, s"Out of bounds. Please, set Horizontal Row < ${hieight}.")
     var field = game.fieldPlay
-    var row = game.fieldPlay(w).updated(h, 6)
+    var row = game.fieldPlay(w).updated(h, 8)
     game.fieldPlay = field.updated(w, row)
     game.fieldPlay
   }

@@ -3,10 +3,10 @@ package ru.steklopod
 import org.scalatest.{FunSuite, Matchers}
 import ru.steklopod.entities.Game
 import ru.steklopod.repositories.{DBGameRepository, GameDb}
-import ru.steklopod.util.GameFieldConverter.convertFieldFromVectorToString
-import scala.concurrent.duration._
 
 import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
 
 class GameDBTest extends FunSuite with Matchers {
 
@@ -28,21 +28,21 @@ class GameDBTest extends FunSuite with Matchers {
   test("Update gameField test") {
     GameDb.init()
     var game = Await.result(Game.findById(1), Duration.Inf).get
-//      new Game("Vasya", Vector(3, 3), "Dima", 3)
 
-    println(game.size)
+    val step = List(0, 4) //IllegalArgumentException
 
-    val step = List(0, 1) //IllegalArgumentException
+    var newField = Try(Game.makeStep(game, step))
 
-    var newField = Game.makeStep(game, step)
-
-    game.fieldPlay = newField
+    newField match {
+      case Success(field) => game.fieldPlay = field
+      case Failure(ex) => println(s"Problem rendering URL content: ${ex.getMessage}")
+    }
 
     println("AFTER:")
     println(game)
 
-    val fieldAsStr = convertFieldFromVectorToString(newField)
-    println(fieldAsStr)
+//    val fieldAsStr = convertFieldFromVectorToString(newField)
+//    println(fieldAsStr)
 
     Game.updateField(game, 1)
   }

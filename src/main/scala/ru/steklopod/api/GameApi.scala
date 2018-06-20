@@ -9,6 +9,8 @@ import ru.steklopod.util.MyJsonProtocol._
 import spray.json._
 import ru.steklopod.repositories.PlayerDb._
 
+import scala.util.{Failure, Success, Try}
+
 trait WithAuth {
   def withAuth: Directive0 = optionalHeaderValueByName("admin")
     .flatMap {
@@ -40,11 +42,11 @@ trait GameApi extends WithAuth with WithSession {
             complete(StatusCodes.OK -> limitGames.toJson)
           }
         } ~ path(LongNumber) { id =>
-//           parameterMap { paramsMap =>
+          //           parameterMap { paramsMap =>
           onSuccess(gameRepository.getGame(id)) {
             case Some(game) => complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields /* ++ Map("params" -> paramsMap.toJson) */))
             case None => complete(StatusCodes.NotFound)
-  //              }
+            //              }
           }
         }
       } ~ withSession {
@@ -52,27 +54,31 @@ trait GameApi extends WithAuth with WithSession {
           path(LongNumber) { id =>
             entity(as[JsValue]) { json =>
               val step = json.asJsObject.fields("step").convertTo[List[Int]]
-
-
-              println(">>>>>>>>>>>>>>>" + step.head + step.tail +" <<<<<<"+ step)
-
               onSuccess(gameRepository.getGame(id)) {
                 case Some(game) => {
+                  var newField = Try(Game.makeStep(game, step))
+                  newField match {
+                    case Success(field) => {
+                      game.fieldPlay = field
+                      Game.updateField(game, id)
+                      Game.printGame(game)
+                      complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields))
+                    }
+                    case Failure(ex) => complete(StatusCodes.BadRequest -> s"You've made a mistake in request: ${ex.getMessage}")
+                  }
                   //TODO - доделать
 
-                  //                  complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields))
-                  complete(StatusCodes.OK -> JsArray(step.toJson))
                 }
-                case None => complete(StatusCodes.NotFound)
+                case None => complete(StatusCodes.BadRequest)
               }
             }
           } ~ entity(as[Game]) { game =>
             complete {
               StatusCodes.OK -> JsObject(gameRepository.createGame(game).toJson.asJsObject.fields)
             }
-            }
           }
         }
+      }
     }
 
 
