@@ -29,22 +29,19 @@ class GameDBTest extends FunSuite with Matchers {
     GameDb.init()
     var game = Await.result(Game.findById(1), Duration.Inf).get
 
-    val step = List(0, 4) //IllegalArgumentException
+    val step = List(0, 1) //IllegalArgumentException
 
-    var newField = Try(Game.makeStep(game, step))
+    var newGame = Try(Game.makeStep(game, step))
 
-    newField match {
-      case Success(field) => game.fieldPlay = field
+    newGame match {
+      case Success(gam) => {
+        println("/// AFTER:")
+        println(gam)
+        Game.updateFieldAndNextStep(gam, 1)
+      }
       case Failure(ex) => println(s"Problem rendering URL content: ${ex.getMessage}")
     }
 
-    println("AFTER:")
-    println(game)
-
-//    val fieldAsStr = convertFieldFromVectorToString(newField)
-//    println(fieldAsStr)
-
-    Game.updateField(game, 1)
   }
 
 }

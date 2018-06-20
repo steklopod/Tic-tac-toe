@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class Game(id: Option[Long],
-                nextStep: String,
+                var nextStep: String,
                 won: Option[String],
                 finished: Boolean,
                 players: String,
@@ -66,10 +66,12 @@ object Game extends SQLSyntaxSupport[Game] {
     game.copy(id = Option(genId))
   }
 
-  def updateField(game: Game, gameId: Long): Int = {
+  def updateFieldAndNextStep(game: Game, gameId: Long): Int = {
+    Game.printGame(game)
     DB autoCommit { implicit session =>
       val sql = withSQL(update(Game).set(
-        column.fieldPlay -> convertFieldFromVectorToString(game.fieldPlay)
+        column.fieldPlay -> convertFieldFromVectorToString(game.fieldPlay),
+        column.nextStep -> game.nextStep
       )
         .where.eq(column.id, gameId))
       sql.update.apply()
@@ -116,7 +118,7 @@ object Game extends SQLSyntaxSupport[Game] {
   }
 
   def printGame(game: Game): Unit = {
-    val players = game.players.split(",")
+    val players: Array[String] = game.players.split(",")
     println("Player 1: " + players(0).trim())
     println("Player 2: " + players(1).trim())
     println("\n")
@@ -127,18 +129,22 @@ object Game extends SQLSyntaxSupport[Game] {
   }
 
   @throws(classOf[IllegalArgumentException])
-  def makeStep(game: Game, step: List[Int]): Vector[Vector[Int]] = {
+  def makeStep(game: Game, step: List[Int]): Game = {
       require(step.size == 2, "Step must contains only 2 elements")
-    val width = game.size.head
-    val hieight = game.size(1)
-    val w = step.head
-    val h = step(1)
+    val width = game.size.head; val hieight = game.size(1)
+    val w = step.head;          val h = step(1)
       require(width > w, s"Out of bounds. Please, set Vertical Row < ${width}.")
       require(hieight > h, s"Out of bounds. Please, set Horizontal Row < ${hieight}.")
     var field = game.fieldPlay
-    var row = game.fieldPlay(w).updated(h, 8)
+    var players: Array[String] = game.players.split(",").map(_.trim)
+
+    val indexOfCurrentPlayer = players.indexOf(game.nextStep)
+    var row = game.fieldPlay(w).updated(h, indexOfCurrentPlayer + 1)
+
+    val playersReverse = players.reverse
+    game.nextStep = playersReverse(indexOfCurrentPlayer)
     game.fieldPlay = field.updated(w, row)
-    game.fieldPlay
+    game
   }
 
 

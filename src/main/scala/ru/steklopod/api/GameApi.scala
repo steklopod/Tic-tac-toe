@@ -56,11 +56,11 @@ trait GameApi extends WithAuth with WithSession {
               val step = json.asJsObject.fields("step").convertTo[List[Int]]
               onSuccess(gameRepository.getGame(id)) {
                 case Some(game) => {
-                  var newField = Try(Game.makeStep(game, step))
+                  var newField = Try(Game.makeStep(game, step).fieldPlay)
                   newField match {
                     case Success(field) => {
                       game.fieldPlay = field
-                      Game.updateField(game, id)
+                      Game.updateFieldAndNextStep(game, id)
                       Game.printGame(game)
                       complete(StatusCodes.OK -> JsObject(game.toJson.asJsObject.fields))
                     }
@@ -69,7 +69,7 @@ trait GameApi extends WithAuth with WithSession {
                   //TODO - доделать
 
                 }
-                case None => complete(StatusCodes.BadRequest)
+                case None => complete(StatusCodes.NotFound)
               }
             }
           } ~ entity(as[Game]) { game =>
