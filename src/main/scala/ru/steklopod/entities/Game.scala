@@ -133,19 +133,18 @@ object Game extends SQLSyntaxSupport[Game] {
         require(step.size == 2, "Step must contains only 2 elements")
     val hieight = game.size.head; val width = game.size(1)
     val h = step.head;            val w = step(1)
-        require(hieight > h, s"Out of bounds. Please, set Vertical Row < ${hieight}.")
-        require(width > w, s"Out of bounds. Please, set Horizontal Row < ${width}.")
+        require(hieight > h, s"Out of bounds. Please, set Horizontal Row < ${hieight}.")
+        require(width > w, s"Out of bounds. Please, set Vertical Row < ${width}.")
     var field = game.fieldPlay
-    var players: Array[String] = game.players.split(",").map(_.trim)
+    val players: Array[String] = game.players.split(",").map(_.trim)
         require(field(h)(w) == 0, s"This position is taken. The move is not possible.")
     val indexOfCurrentPlayer = players.indexOf(game.nextStep)
-    var row = game.fieldPlay(h).updated(w, indexOfCurrentPlayer + 1)
+    val row = game.fieldPlay(h).updated(w, indexOfCurrentPlayer + 1)
 
     val playersReverse = players.reverse
     game.nextStep = playersReverse(indexOfCurrentPlayer)
     game.fieldPlay = field.updated(h, row)
     game
   }
-
 
 }
