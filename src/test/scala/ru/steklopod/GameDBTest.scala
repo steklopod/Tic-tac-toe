@@ -29,6 +29,7 @@ class GameDBTest extends FunSuite with Matchers {
     GameDb.init()
     var game = Await.result(Game.findById(1), Duration.Inf).get
 
+
     val step = List(0, 1) //IllegalArgumentException
 
     var newGame = Try(Game.makeStep(game, step))
@@ -39,7 +40,7 @@ class GameDBTest extends FunSuite with Matchers {
         println(gam)
         Game.updateFieldAndNextStep(gam, 1)
       }
-      case Failure(ex) => println(s"Problem rendering URL content: ${ex.getMessage}")
+      case Failure(ex) => println(s"Problem: ${ex.getMessage}")
     }
 
   }
