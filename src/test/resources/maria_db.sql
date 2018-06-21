@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS player (
 );
 TRUNCATE TABLE player;
 
+
 ###########
 -- sessions
 CREATE TABLE IF NOT EXISTS sessions (
@@ -48,32 +49,17 @@ CREATE TABLE IF NOT EXISTS sessions (
   ON UPDATE CURRENT_TIMESTAMP
 );
 
+
 SELECT EXISTS(SELECT session FROM sessions where session = 'abc');
 
-SELECT *
-FROM sessions
-WHERE (CURRENT_TIMESTAMP() - created) > 1 * 5;
-
-
-SELECT * FROM sessions WHERE TIMESTAMPDIFF(MINUTE, CURRENT_TIMESTAMP(), created) < 5;
-
 
 SELECT *
 FROM sessions
-WHERE created >= (TIMESTAMPDIFF(MINUTE, 5, CURRENT_DATE));
+WHERE TIMESTAMPDIFF(MINUTE, CURRENT_TIMESTAMP(), created) < 5;
 
-
-INSERT INTO `sessions` (session)
-VALUES ($2a$10$ilYozpv4TYAiL9Jn6XedjeJ5QGZwPlgLyM.Ctjg5foBVDyxJYB8 / C);
-
-
-SELECT session
-FROM sessions
-WHERE created < DATE_SUB(NOW(), INTERVAL 5 MINUTE);
 
 DELETE
 FROM sessions
-WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE);
-
+WHERE TIMESTAMPDIFF(MINUTE, CURRENT_TIMESTAMP(), created) < 5;
 
 SELECT CURRENT_TIMESTAMP;

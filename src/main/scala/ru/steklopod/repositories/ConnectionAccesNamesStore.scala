@@ -14,8 +14,8 @@ object ConnectionAccesNamesStore {
   var LOGIN_MARIA = "root"
   val PSWRD_MARIA = "root"
 
-  val URL_H2_IN_MEMORY: String = "jdbc:h2:mem:" + SHEMA_NAME + ADDITIONAL_ARGUMENTS
   val ADDITIONAL_ARGUMENTS = ";MODE=MYSQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;"
+  val URL_H2_IN_MEMORY: String = "jdbc:h2:mem:" + SHEMA_NAME + ADDITIONAL_ARGUMENTS
   val DRIVER_H2_IN_MEMORY = "org.h2.Driver"
   val LOGIN_H2_IN_MEMORY = ""
   val PSWRD_H2_IN_MEMORY = ""
@@ -28,6 +28,7 @@ object ConnectionAccesNamesStore {
 //      ds.setJdbcUrl(URL_MARIA)
 //      ds.setPassword(PSWRD_MARIA)
 //      ds.setUsername(LOGIN_MARIA)
+//            ds.setDriverClassName(DRIVER_H2_IN_MEMORY)
 
       ds.setJdbcUrl(URL_H2_IN_MEMORY)
       ds.setPassword(PSWRD_H2_IN_MEMORY)
