@@ -18,9 +18,12 @@ CREATE TABLE IF NOT EXISTS game (
 );
 TRUNCATE TABLE game;
 
-SELECT MAX(id) FROM GAME;
+SELECT MAX(id)
+FROM GAME;
 
-SELECT * FROM game LIMIT 2;
+SELECT *
+FROM game
+LIMIT 2;
 
 #########
 -- player
@@ -30,9 +33,9 @@ CREATE TABLE IF NOT EXISTS player (
   id       SERIAL NOT NULL PRIMARY KEY,
   username VARCHAR(20) UNIQUE,
   password VARCHAR(100),
-  online BOOLEAN,
-  wins INT,
-  losses INT
+  online   BOOLEAN,
+  wins     INT,
+  losses   INT
 );
 TRUNCATE TABLE player;
 
@@ -42,11 +45,23 @@ CREATE TABLE IF NOT EXISTS sessions (
   id      SERIAL NOT NULL PRIMARY KEY,
   session TEXT,
   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  ON UPDATE CURRENT_TIMESTAMP);
+  ON UPDATE CURRENT_TIMESTAMP
+);
 
 SELECT EXISTS(SELECT session FROM sessions where session = 'abc');
 
-SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 20 MINUTE) AND SESSION = 'abc';
+SELECT *
+FROM sessions
+WHERE (CURRENT_TIMESTAMP() - created) > 1 * 5;
+
+
+SELECT * FROM sessions WHERE TIMESTAMPDIFF(MINUTE, CURRENT_TIMESTAMP(), created) < 5;
+
+
+SELECT *
+FROM sessions
+WHERE created >= (TIMESTAMPDIFF(MINUTE, 5, CURRENT_DATE));
+
 
 INSERT INTO `sessions` (session)
 VALUES ($2a$10$ilYozpv4TYAiL9Jn6XedjeJ5QGZwPlgLyM.Ctjg5foBVDyxJYB8 / C);

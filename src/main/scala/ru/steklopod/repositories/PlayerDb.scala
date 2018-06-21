@@ -53,7 +53,7 @@ object PlayerDb {
 
   def isSessionExist(sessionValue: String): Boolean = {
     DB readOnly { implicit session =>
-      val s: Option[String] = SQL("SELECT * FROM sessions WHERE created >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND `session` = ?")
+      val s: Option[String] = SQL("SELECT * FROM sessions WHERE TIMESTAMPDIFF(MINUTE, CURRENT_TIMESTAMP(), created) < 5 AND `session` = ?")
         .bind(sessionValue)
         .map(rs => rs.string("session"))
         .single.apply()
@@ -80,7 +80,7 @@ object PlayerDb {
     def run() {
         DB autoCommit { implicit session =>
           sql"""
-      DELETE FROM sessions WHERE created <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+      DELETE FROM sessions WHERE TIMESTAMPDIFF(MINUTE, CURRENT_TIMESTAMP(), created) < 5
      """.execute.apply()
         }
       }
