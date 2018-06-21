@@ -24,7 +24,7 @@ object ConnectionAccesNamesStore {
     import com.zaxxer.hikari._
     private[this] lazy val dataSource: DataSource = {
       val ds = new HikariDataSource()
-      ds.setDriverClassName(DRIVER_H2_IN_MEMORY)
+//      ds.setDriverClassName(DRIVER_H2_IN_MEMORY)
       ds.setJdbcUrl(URL_H2_IN_MEMORY)
       ds.setPassword(PSWRD_H2_IN_MEMORY)
       ds.setUsername(LOGIN_H2_IN_MEMORY)

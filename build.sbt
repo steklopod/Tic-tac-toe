@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.0",
   "io.spray" %% "spray-json" % "1.3.4",
   "org.mariadb.jdbc" % "mariadb-java-client" % "2.2.5",
-//  "org.postgresql" % "postgresql" % "42.2.2",
+  //  "org.postgresql" % "postgresql" % "42.2.2",
   "com.typesafe.slick" %% "slick" % "3.2.3",
   "org.tpolecat" %% "doobie-core" % "0.5.1",
   "org.scalikejdbc" %% "scalikejdbc" % "3.2.3",
@@ -42,8 +42,8 @@ libraryDependencies ++= Seq(
   "com.softwaremill.akka-http-session" %% "core" % "0.5.5",
   // https://mvnrepository.com/artifact/mysql/mysql-connector-java
   "mysql" % "mysql-connector-java" % "8.0.11",
-  "com.h2database" % "h2" % "1.4.197" % Test
-//"com.h2database" % "h2" % "1.4.197",
+  //  "com.h2database" % "h2" % "1.4.197" % Test,
+  "com.h2database" % "h2" % "1.4.197"
 
 )
 
