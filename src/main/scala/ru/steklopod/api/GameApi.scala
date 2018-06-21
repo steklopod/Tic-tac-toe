@@ -39,7 +39,11 @@ trait GameApi extends WithAuth with WithSession {
           if (limit <= 0 | offset < 0) complete(StatusCodes.BadRequest -> "Please, make limit > 0 & offset >= 0")
           else {
             lazy val limitGames = gameRepository.findAll(limit, offset)
-            complete(StatusCodes.OK -> limitGames.toJson)
+            if(limitGames.isEmpty){
+              complete(StatusCodes.NotFound)
+            }else {
+              complete(StatusCodes.OK -> limitGames.toJson)
+            }
           }
         } ~ path(LongNumber) { id =>
           //           parameterMap { paramsMap =>
@@ -48,6 +52,7 @@ trait GameApi extends WithAuth with WithSession {
             case None => complete(StatusCodes.NotFound)
             //              }
           }
+          //TODO - StatusCodes.NotFound
         }
       } ~ withSession {
         post {
@@ -62,7 +67,6 @@ trait GameApi extends WithAuth with WithSession {
                       Game.updateFieldAndNextStep(updGame, id)
                       complete(StatusCodes.OK -> JsObject(updGame.toJson.asJsObject.fields))
                       //TODO - доделать crossesLengthToWin
-
 
                     }
                     case Failure(ex) => complete(StatusCodes.BadRequest -> s"You've made a mistake in request: ${ex.getMessage}")
