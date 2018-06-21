@@ -64,7 +64,7 @@ trait GameApi extends WithAuth with WithSession {
                     }
                     case Failure(ex) => complete(StatusCodes.BadRequest -> s"You've made a mistake in request: ${ex.getMessage}")
                   }
-                  //TODO - доделать
+                  //TODO - доделать crossesLengthToWin
 
                 }
                 case None => complete(StatusCodes.NotFound)

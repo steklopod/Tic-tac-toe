@@ -13,7 +13,7 @@ case class Game(id: Option[Long],
                 players: String,
                 steps: Int,
                 size: Vector[Int],
-                crossesLengthToWin: Int,
+                var crossesLengthToWin: Int,
                 var fieldPlay: Vector[Vector[Int]]
                ) {
   def this(nextStep: String, won: Option[String], finished: Boolean, players: String, steps: Int, size: Vector[Int], crossesLengthToWin: Int, fieldPlay: Vector[Vector[Int]]) {
@@ -140,6 +140,7 @@ object Game extends SQLSyntaxSupport[Game] {
         require(field(h)(w) == 0, s"This position is taken. The move is not possible.")
     val indexOfCurrentPlayer = players.indexOf(game.nextStep)
     val row = game.fieldPlay(h).updated(w, indexOfCurrentPlayer + 1)
+    //TODO - доделать crossesLengthToWin
 
     val playersReverse = players.reverse
     game.nextStep = playersReverse(indexOfCurrentPlayer)

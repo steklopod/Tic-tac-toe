@@ -28,8 +28,6 @@ class GameDBTest extends FunSuite with Matchers {
   test("Update gameField test") {
     GameDb.init()
     var game = Await.result(Game.findById(1), Duration.Inf).get
-
-
     val step = List(2, 1) //IllegalArgumentException
 
     var newGame = Try(Game.makeStep(game, step))
