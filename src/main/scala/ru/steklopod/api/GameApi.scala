@@ -4,7 +4,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directive0
 import akka.http.scaladsl.server.Directives._
 import ru.steklopod.entities.Game
-import ru.steklopod.repositories.GameRepository
+import ru.steklopod.repositories.{GameDb, GameRepository}
 import ru.steklopod.util.MyJsonProtocol._
 import spray.json._
 import ru.steklopod.repositories.PlayerDb._
@@ -61,11 +61,12 @@ trait GameApi extends WithAuth with WithSession {
                     case Success(updGame) => {
                       Game.updateFieldAndNextStep(updGame, id)
                       complete(StatusCodes.OK -> JsObject(updGame.toJson.asJsObject.fields))
+                      //TODO - доделать crossesLengthToWin
+
+
                     }
                     case Failure(ex) => complete(StatusCodes.BadRequest -> s"You've made a mistake in request: ${ex.getMessage}")
                   }
-                  //TODO - доделать crossesLengthToWin
-
                 }
                 case None => complete(StatusCodes.NotFound)
               }
@@ -85,6 +86,7 @@ trait GameApi extends WithAuth with WithSession {
       path("reset") {
         withAuth {
           post {
+            GameDb.truncateAll()
             complete(StatusCodes.OK -> "Data succesfully deleted from tables.")
           }
         }

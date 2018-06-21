@@ -55,10 +55,19 @@ object GameDb {
         .execute.apply()
     }
   }
+  def truncateSession(): Boolean = {
+    DB autoCommit { implicit session =>
+      sql"""
+           TRUNCATE TABLE sessions
+        """
+        .execute.apply()
+    }
+  }
 
   def truncateAll(): Boolean = {
     truncateGame()
     truncatePlayer()
+    truncateSession()
   }
 
 }

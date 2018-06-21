@@ -28,12 +28,10 @@ object ConnectionAccesNamesStore {
 //      ds.setJdbcUrl(URL_MARIA)
 //      ds.setPassword(PSWRD_MARIA)
 //      ds.setUsername(LOGIN_MARIA)
-//            ds.setDriverClassName(DRIVER_H2_IN_MEMORY)
 
       ds.setJdbcUrl(URL_H2_IN_MEMORY)
       ds.setPassword(PSWRD_H2_IN_MEMORY)
       ds.setUsername(LOGIN_H2_IN_MEMORY)
-
       ds
     }
     def apply(): DataSource = dataSource
