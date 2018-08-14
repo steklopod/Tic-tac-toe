@@ -10,6 +10,7 @@ import ru.steklopod.api.{GameApi, PlayerApi}
 import ru.steklopod.repositories.PlayerDb.deleteOldSessions
 import ru.steklopod.repositories._
 
+import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration.Duration
 import scala.io.StdIn
 
@@ -17,12 +18,12 @@ object WebServer extends GameApi with PlayerApi{
 
   def main(args: Array[String]) {
 
-    implicit val system = ActorSystem("my-system")
-    implicit val materializer = ActorMaterializer()
+    implicit val system: ActorSystem = ActorSystem("my-system")
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
     // needed for the future flatMap/onComplete in the end
-    implicit val executionContext = system.dispatcher
+    implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-    val bindingFuture = Http().bindAndHandle(route ~ routeUser ~ routeDebug, "localhost", 8080)
+    val bindingFuture = Http().bindAndHandle(route ~ routeUser ~ routeDebug, "localhost", 8081)
 
     val scheduler = system.scheduler
     scheduler.schedule(
